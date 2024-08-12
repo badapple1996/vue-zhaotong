@@ -1,25 +1,34 @@
 <template>  
-  <el-form :model="form" ref="form" label-width="120px" class="form-container">  
-    <el-row :gutter="20" type="flex" justify="start" align="middle">  
-      <!-- 假设你有多个输入框，我们先以9个为例，每行3个 -->  
-      <el-col :span="8" v-for="(input, index) in formInputs" :key="index" :class="{'date-picker-col': index === 6}">  
+  <el-form :model="form" label-width="100px" class="form-container">  
+    <el-row :gutter="20">  
+      <!-- 第一行 -->  
+      <el-col :span="8" v-for="(input, index) in ['input1', 'input2', 'input3']" :key="index">  
         <el-form-item :label="`字段${index + 1}`">  
-          <!-- 如果是第三行的第一个（即索引为6的），则显示DatePicker -->  
-          <el-date-picker  
-            v-if="index === 6"  
-            v-model="form.date"  
-            type="date"  
-            placeholder="选择日期"  
-            style="width: 100%;">  
-          </el-date-picker>  
-          <el-input  
-            v-else  
-            v-model="form[input]"  
-            autocomplete="off"  
-            style="width: 100%;">  
-          </el-input>  
+          <el-input v-model="form[input]" autocomplete="off"></el-input>  
         </el-form-item>  
       </el-col>  
+  
+      <!-- 第二行（如果需要更多行，可以复制并粘贴下面的代码块） -->  
+      <!-- 注意：这里省略了第二行的示例，因为它与第一行完全相同，只是字段名不同 -->  
+  
+      <!-- 第三行 -->  
+      <el-col :span="8">  
+        <el-form-item label="选择日期">  
+          <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>  
+        </el-form-item>  
+      </el-col>  
+      <el-col :span="8">  
+        <el-form-item label="字段4">  
+          <el-input v-model="form.input4" autocomplete="off"></el-input>  
+        </el-form-item>  
+      </el-col>  
+      <el-col :span="8">  
+        <el-form-item label="字段5">  
+          <el-input v-model="form.input5" autocomplete="off"></el-input>  
+        </el-form-item>  
+      </el-col>  
+  
+      <!-- 注意：这里只展示了三行的情况，如果输入项超过这些，你可以继续添加更多的行 -->  
     </el-row>  
   </el-form>  
 </template>  
@@ -35,13 +44,8 @@ export default {
         input3: '',  
         input4: '',  
         input5: '',  
-        input6: '',  
-        input7: '',  
-        input8: '',  
         // 如果需要更多输入，可以继续添加  
       },  
-      // 假设你事先知道所有输入项的键名  
-      formInputs: ['input1', 'input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8'],  
     };  
   },  
   // 其他选项和方法...  
@@ -49,12 +53,5 @@ export default {
 </script>  
   
 <style scoped>  
-/* 可选：为DatePicker所在的列添加一些样式，如果需要的话 */  
-/* .date-picker-col {   */
-  /* 这里可以根据需要添加CSS样式，但通常Element UI的栅格系统已经足够处理布局 */  
-/* }   */
-  
-/* 为了确保输入框在不同屏幕尺寸下都能保持整齐，  
-   Element UI的栅格系统会自动调整。但如果你需要进一步的自定义，  
-   可以在这里添加媒体查询来适应不同的屏幕尺寸。 */  
+/* 你可以在这里添加一些自定义样式 */  
 </style>
