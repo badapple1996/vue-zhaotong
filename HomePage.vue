@@ -1,13 +1,13 @@
 <template>
     <div class="container">
         <!-- <el-form :inline="true" :model="formInline" :label-position="labelPosition" label-width="80px" size="mini" class="demo-form-inline"> -->
-          <el-form   :model="formInline"  size="mini" label-width="120px"  class="demo-form-inline">
+        <el-form   :model="formInline"  size="mini" label-width="120px"  class="demo-form-inline">
           <!-- <el-row :gutter="20">  -->
             <el-row>
               <el-col :span="8">
                 <div class="grid-content">
                   <el-form-item label="申报业务类型">
-                    <el-select v-model="formInline.status" placeholder="请选择" style="width: 100%;" >
+                  <el-select v-model="formInline.status" placeholder="请选择" style="width: 100%;" >
                       <el-option label="区域一" value="shanghai"></el-option>
                       <el-option label="区域二" value="beijing"></el-option>
                   </el-select>
@@ -17,14 +17,14 @@
               <el-col :span="8">
                 <div class="grid-content">
                   <el-form-item label="申报事件ID">
-                    <el-input v-model="formInline.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  <el-input v-model="formInline.khmc" placeholder="请输入" class="uniform-width"></el-input>
                   </el-form-item>
                 </div>
               </el-col>
               <el-col :span="8">
                 <div class="grid-content">
                   <el-form-item label="办件状态">
-                    <el-select v-model="formInline.status" placeholder="请选择" class="uniform-width" >
+                  <el-select v-model="formInline.status" placeholder="请选择" class="uniform-width" >
                       <el-option label="区域一" value="shanghai"></el-option>
                       <el-option label="区域二" value="beijing"></el-option>
                   </el-select>
@@ -34,14 +34,14 @@
               <el-col :span="8">
                 <div class="grid-content">
                   <el-form-item label="客户名称">
-                    <el-input v-model="formInline.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  <el-input v-model="formInline.khmc" placeholder="请输入" class="uniform-width"></el-input>
                   </el-form-item>
                 </div>
               </el-col>
               <el-col :span="8">
                 <div class="grid-content">
                   <el-form-item label="证件类型">
-                    <el-select v-model="formInline.zjlx" placeholder="请选择" style="width: 100%;" >
+                  <el-select v-model="formInline.zjlx" placeholder="请选择" style="width: 100%;" >
                       <el-option label="区域一" value="shanghai"></el-option>
                       <el-option label="区域二" value="beijing"></el-option>
                   </el-select>
@@ -59,7 +59,7 @@
                 <div class="grid-content">
                   <el-form-item label="申请日期" >
                     <el-date-picker
-                    style="width: 100%;"
+                     style="width: 100%;"
                     v-model="formInline.sqrq"
                     type="daterange"
                     start-placeholder="开始日期"
@@ -119,65 +119,29 @@
               label="操作"
               width="100">
               <template slot-scope="scope">
-                  <el-button @click="browse(scope.row)" type="text" size="small">浏览</el-button>
-                  <el-button @click="feedback()" type="text" size="small">反馈</el-button>
+                  <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                  <el-button type="text" size="small">编辑</el-button>
               </template>
           </el-table-column>
-      </el-table>
-      <el-pagination
-        class="pagination"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="40">
-      </el-pagination>
-      <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="活动区域" :label-width="formLabelWidth">
-            <el-select v-model="form.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-        </div>
-      </el-dialog>
+    </el-table>
+    <el-pagination
+      class="pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage4"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="10"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="40">
+    </el-pagination>
     </div>
-    <!-- <FristDialog :visible.sync="dialogVisible"></FristDialog> -->
 </template>
   <script>
 // import { from } from 'core-js/core/array';
-import FristDialog from './FristDialog.vue'
+
   export default {
-    name: 'HomePage',  
-    components: {  
-      // 注册子组件，使其可以在模板中使用  
-      FristDialog  
-    },  
     data() {
       return {
-        dialogFormVisible: false,//弹框
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        formLabelWidth: '120px',
-        dialogVisible: false,//第一个弹框
         form: {  
         date: '',  
         input1: '',  
@@ -263,14 +227,6 @@ import FristDialog from './FristDialog.vue'
       };
     },
     methods: {
-      // 浏览
-      browse() {
-         this.dialogFormVisible = true//第一个弹框
-      },
-      // 反馈
-      feedback() {
-
-      },
       onSubmit() {
         console.log("submit!");
       },
@@ -316,6 +272,6 @@ import FristDialog from './FristDialog.vue'
       display: none;  
     }   */
     .uniform-width {
-      width: 100%;
-    }
+  width: 100%;
+}
     </style>

@@ -4,7 +4,7 @@
       <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
       <!-- <test /> -->
       <HomePage />
-      <Dialog />
+      <FristDialog />
 
     </div>
   </template>
@@ -12,14 +12,16 @@
   <script>
   // @ is an alias to /src
   import HomePage from '@/components/HomePage.vue'
-  import Dialog from '@/components/Dialog.vue'
+  // import Dialog from '@/components/Dialog.vue'
+  // import FristDialog from '@/components/FristDialog.vue'
 //   import test from '@/components/test.vue'
   
   export default {
     name: 'FristView',
     components: {
         HomePage,
-        Dialog,
+        // FristDialog,
+        // Dialog,
         // test
 
     }
