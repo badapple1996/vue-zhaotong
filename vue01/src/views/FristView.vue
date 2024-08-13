@@ -4,7 +4,7 @@
       <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
       <!-- <test /> -->
       <HomePage />
-      <FristDialog />
+      <!-- <FristDialog /> -->
 
     </div>
   </template>

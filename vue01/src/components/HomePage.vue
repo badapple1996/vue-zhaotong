@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <!-- <el-form :inline="true" :model="formInline" :label-position="labelPosition" label-width="80px" size="mini" class="demo-form-inline"> -->
-          <el-form   :model="formInline"  size="mini" label-width="120px"  class="demo-form-inline">
+          <el-form   :model="formInline"  size="mini" label-width="120px" ref="myForm"  class="demo-form-inline">
           <!-- <el-row :gutter="20">  -->
             <el-row>
               <el-col :span="8">
@@ -84,7 +84,7 @@
                 </div>
               </el-col>
           </el-row>
-      <el-form-item>
+      <el-form-item class="buttonHome">
         <el-button type="primary" @click="onSubmit">查询</el-button>
         <el-button @click="reset">重置</el-button>
        </el-form-item>
@@ -134,34 +134,300 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="40">
       </el-pagination>
-      <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="活动区域" :label-width="formLabelWidth">
-            <el-select v-model="form.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
+
+      <!-- //第一个浏览弹框 -->
+
+      <el-dialog title="个人就业创业一件事浏览" width="80%" top="10vh" :visible.sync="dialogFormVisible" class="dialog-frist">
+        <div class="form-tip">申报信息</div>
+        <el-form   :model="formFrist" ref="myFormfrist" label-width="150px"  class="demo-form-inline">
+          <!-- <el-row :gutter="20">  -->
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="申报对象证件号码">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="申报对象名称">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="姓名">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="证件类型">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="性别">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="民族">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="婚姻状况">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="户口性质">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="居住详细住址">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="户籍所在地">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="业务类型">
+                    <el-select v-model="formFrist.status" placeholder="请选择" style="width: 100%;" >
+                      <el-option label="个人开户、个人启封" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                  </el-select>
+                </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="职业">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="缴存银行账户">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="缴款方式">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="月缴存额">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="缴存基数">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="学历">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="邮政编码">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="固定电话号码">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="经办机构所在地">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+          </el-row>
+          <!-- <el-form-item class="dialog-button">
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+          </el-form-item> -->
+        </el-form> 
+        <div class="form-tip">反馈信息</div>
+        <el-form   :model="formFrist" ref="myFormfrist" label-width="120px"  class="demo-form-inline">
+          <!-- <el-row :gutter="20">  -->
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="处理结果">
+                    <el-select v-model="formFrist.status" placeholder="请选择" style="width: 100%;" >
+                      <el-option label="成功" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                  </el-select>
+                </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="失败原因">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="单位账号">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="办理日期">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="手机号码">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="扣款账户名称">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="月缴存额">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="所属银行">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="经办人账号">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item label="经办人证件号码">
+                    <el-input v-model="formFrist.khmc" placeholder="请输入" class="uniform-width"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+          </el-row>
+          <!-- <el-form-item class="dialog-button">
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+          </el-form-item> -->
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div class="form-tip">附件列表信息</div>
+        <el-table
+          :data="tableDataFrist"
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="xh"
+            label="序号"
+            width="300">
+          </el-table-column>
+          <el-table-column
+            prop="wjlx"
+            label="文件类型"
+            width="300">
+          </el-table-column>
+          <el-table-column
+            prop="wjmc"
+            label="文件名称"
+            width="300">
+          </el-table-column>
+          <el-table-column
+            prop="cjsj"
+            label="创建时间"
+            width="300">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button @click="handleClick(scope.row)" type="text" size="small">下载</el-button>
+            </template>
+          </el-table-column>
+        </el-table> 
+        <!-- <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-        </div>
+        </div> -->
       </el-dialog>
     </div>
     <!-- <FristDialog :visible.sync="dialogVisible"></FristDialog> -->
 </template>
   <script>
-// import { from } from 'core-js/core/array';
-import FristDialog from './FristDialog.vue'
+// import FristDialog from './FristDialog.vue'
   export default {
     name: 'HomePage',  
     components: {  
       // 注册子组件，使其可以在模板中使用  
-      FristDialog  
+      // FristDialog  
     },  
     data() {
       return {
@@ -177,24 +443,24 @@ import FristDialog from './FristDialog.vue'
           desc: ''
         },
         formLabelWidth: '120px',
-        dialogVisible: false,//第一个弹框
-        form: {  
-        date: '',  
-        input1: '',  
-        input2: '',  
-        input3: '',  
-        input4: '',  
-        input5: '',  
-        input6: '',  
-        input7: '',  
-        input8: '',  
-        // 如果需要更多输入，可以继续添加  
-        },  
+        dialogVisible: false,//第一个弹框 
         labelPosition:'right',
         value: '',
         currentPage4: 4,
 
         formInline: {
+          id: "",
+          applytype: "",
+          khmc: "",
+          zjlx: "",
+          zjhm: "",
+          status: "",
+          sqrq: "",
+          jbr: "",
+          busiid: "",
+        },
+        //第一个弹框表单
+        formFrist: {
           id: "",
           applytype: "",
           khmc: "",
@@ -259,7 +525,14 @@ import FristDialog from './FristDialog.vue'
           fksj: 200333,
           jbr: 200333,
           busiid: 200333,
-        }]
+        }],
+        //个人就业创业一件事浏览
+        tableDataFrist: [{
+          xh: '2016-05-03',
+          wjlx: '王小虎',
+          wjmc: '上海',
+          cjsj: '普陀区',
+        }],
       };
     },
     methods: {
@@ -271,8 +544,16 @@ import FristDialog from './FristDialog.vue'
       feedback() {
 
       },
+      // 查询
       onSubmit() {
         console.log("submit!");
+      },
+      // 重置
+      reset() {
+        this.$refs.myForm.reset();
+        // 使用Element UI的resetFields方法重置表单  
+      // 这里的ref属性要与el-form上的ref属性值对应  
+      this.$refs.myForm.resetFields();
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
@@ -299,6 +580,9 @@ import FristDialog from './FristDialog.vue'
       margin-right: 20px;  
       margin-bottom: 20px;  
     }  
+    .container .buttonHome {
+        text-align: center;
+      }
     /* .input-wrapper {  
       display: flex;  
       flex-wrap: wrap;  
@@ -318,4 +602,17 @@ import FristDialog from './FristDialog.vue'
     .uniform-width {
       width: 100%;
     }
+    .dialog-frist {
+      text-align: center;
+    }
+    /* 定位提示文字到表单的左上方 */  
+    .dialog-frist .form-tip {  
+      /* position: absolute; 绝对定位   */
+      /* top: -20px; 向上偏移20px（根据需要调整）   */
+      text-align: left;
+      margin-bottom: 20px;
+      left: 10px; /* 左偏移量与表单的label-width一致（或根据需要调整） */  
+      color: #070707; /* 提示文字颜色 */  
+      font-size: 24px; /* 提示文字大小 */  
+    } 
     </style>
