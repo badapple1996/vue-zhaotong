@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <router-view />
   </div>
 </template>
@@ -8,4 +8,9 @@ export default {
   name: 'App'
 }
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+// #app {
+//   overflow: auto !important;
+// }
+</style>
+
