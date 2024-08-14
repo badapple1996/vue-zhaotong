@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+      <el-header height="120px">
+        <div>
+          <h1>政务数据直达系统</h1>
+        </div>
+      </el-header>
       <!-- <el-form :inline="true" :model="formInline" :label-position="labelPosition" label-width="80px" size="mini" class="demo-form-inline"> -->
         <el-form   :model="formInline"  size="mini" label-width="120px" ref="myForm"  class="demo-form-inline">
         <!-- <el-row :gutter="20">  -->
@@ -7,9 +12,13 @@
             <el-col :span="8">
               <div class="grid-content">
                 <el-form-item label="申报业务类型">
-                  <el-select v-model="formInline.status" placeholder="请选择" style="width: 100%;" >
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
+                  <el-select v-model="formInline.status" clearable placeholder="请选择" style="width: 100%;" >
+                    <el-option  
+                      v-for="bank in bank"  
+                      :key="bank.value"  
+                      :label="bank.label"  
+                      :value="bank.value">  
+                    </el-option>
                 </el-select>
               </el-form-item>
               </div>
@@ -423,6 +432,9 @@
 </template>
 <script>
 import { listSq, getSq } from '@/api/sq'
+// 导入JSON文件  
+import bank from '@/data/bank.json';  
+import city from '@/data/city.json';   
 
 // import FristDialog from './FristDialog.vue'
 export default {
@@ -433,6 +445,10 @@ export default {
   },  
   data() {
     return {
+      // 字典数据对象  
+      bank: bank,  
+      city: city,  
+      
       dialogFormVisible: false,//弹框
       form: {
         name: '',
@@ -537,30 +553,30 @@ export default {
       }],
         // 查询参数
         queryParams: {
-        pageNum: 1,
-        pageSize: 20,
-        zxbh: null,
-        id: null,
-        applytype: null,
-        applytypedesc: null,
-        khmc: null,
-        zjlx: null,
-        zjlxdesc: null,
-        zjhm: null,
-        status: null,
-        statusdesc: null,
-        sqrq: null,
-        cjsj: null,
-        fkrq: null,
-        fksj: null,
-        whrq: null,
-        whsj: null,
-        jbr: null,
-        jbrxm: null,
-        jbrzjhm: null,
-        busiid: null,
-        whsbcs: null
-      },
+          pageNum: 1,
+          pageSize: 20,
+          zxbh: null,
+          id: null,
+          applytype: null,
+          applytypedesc: null,
+          khmc: null,
+          zjlx: null,
+          zjlxdesc: null,
+          zjhm: null,
+          status: null,
+          statusdesc: null,
+          sqrq: null,
+          cjsj: null,
+          fkrq: null,
+          fksj: null,
+          whrq: null,
+          whsj: null,
+          jbr: null,
+          jbrxm: null,
+          jbrzjhm: null,
+          busiid: null,
+          whsbcs: null
+        },
     };
   },
   created() {
@@ -605,7 +621,18 @@ export default {
   },
 };
 </script>
-  <style scoped>  
+  <style scoped>
+  .el-header {
+    background-image: url('../../../static/banner.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: #fefefe;
+    text-shadow: 0px 1px 0px #c0c0c0, 0px 2px 0px #b0b0b0, 0px 3px 0px #a0a0a0, 0px 4px 0px #909090,
+      0px 5px 10px rgba(0, 0, 0, 0.9);
+
+    font-size: large;
+    margin-bottom: 10px;
+  }  
   .container {  
     /* 确保父容器有足够的宽度 */  
     width: 100%;  
