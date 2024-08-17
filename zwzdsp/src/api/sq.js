@@ -8,6 +8,14 @@ export function listSq(query) {
     params: query
   })
 }
+// 浏览查询
+export function listQq(data) {
+  return request({
+    url: '/zwsj/sq/queryById',
+    method: 'post',
+    params: data
+  })
+}
 
 // 查询政务数据直达系统办件申请信息详细
 export function getSq(zxbh) {

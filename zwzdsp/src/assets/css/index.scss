@@ -6,12 +6,16 @@ body .app {
   color: #333333;
   font-family: Arial, Helvetica, 'STHeiti STXihei', 'Microsoft YaHei', Tohoma, sans-serif;
   background-color: $background-color;
+  width: 100%;
+  // overflow: hidden;
+  // overflow-x: hidden; /* 隐藏横向滚动条 */ 
 }
 
 .app-container {
   // padding-bottom: 100px;
   height: 100vh;
-  width: 100vw;
+  // width: 100vw;
+  width: 100%;
   // overflow: hidden;
 }
 .top-right-btn {
