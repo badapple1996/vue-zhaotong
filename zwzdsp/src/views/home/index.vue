@@ -52,7 +52,7 @@
         <el-col :span="8">
           <div class="grid-content">
             <el-form-item label="证件类型">
-              <el-select v-model="formInline.zjlx" clearable placeholder="请选择" style="width: 100%">
+              <el-select v-model="formInline.zjlx" clearable multiple placeholder="请选择" style="width: 100%">
                 <el-option v-for="item in DOCUMENT_TYPE" :key="item.value" :label="item.label" :value="item.value"> </el-option>
               </el-select>
             </el-form-item>
@@ -141,7 +141,7 @@
         </template> 
       </el-table-column>
       <el-table-column prop="busiid" label="业务序号" width="150"> </el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
+      <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
           <el-button @click="browse(scope.row)" type="text" size="small">浏览</el-button>
           <el-button
@@ -149,7 +149,7 @@
             type="text"
             size="small"
             :disabled="
-              scope.row.status === 3 || scope.row.status === 4 || scope.row.status === 5 || scope.row.status === 6
+             scope.row.status === '2' ||  scope.row.status === '3' || scope.row.status === '4' || scope.row.status === '5' || scope.row.status === '6'
             "
             >反馈</el-button
           >
@@ -353,8 +353,10 @@
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item> -->
       </el-form>
-      <div class="form-tip">反馈信息</div>
-      <el-form :model="formFristback" ref="myFormfrist" label-width="120px" size="mini" class="demo-form-inline">
+      <template  v-if = "showBack">
+        <div>
+        <div class="form-tip">反馈信息</div>
+      <el-form :model="formFristback"   ref="myFormfrist" label-width="120px" size="mini" class="demo-form-inline">
         <!-- <el-row :gutter="20">  -->
         <el-row>
           <el-col :span="8">
@@ -376,6 +378,13 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
+              <el-form-item label="业务序号" v-if="formFristback.cljg === 'success'">
+                <el-input v-model="formFristback.busiid" placeholder="请输入" class="uniform-width"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
               <el-form-item label="单位账号" v-if="formFristback.cljg === 'success'">
                 <el-input v-model="formFristback.unitaccnum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
@@ -385,6 +394,13 @@
             <div class="grid-content">
               <el-form-item label="办理日期" v-if="formFristback.cljg === 'success'">
                 <el-input v-model="formFristback.TranDate" placeholder="请输入" class="uniform-width"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
+              <el-form-item label="个人账号" v-if="formFristback.cljg === 'success'">
+                <el-input v-model="formFristback.accnum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -404,6 +420,13 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
+              <el-form-item label="每月约定扣款日" v-if="formFristback.cljg === 'success'">
+                <el-input v-model="formFristback.day" placeholder="请输入" class="uniform-width"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
               <el-form-item label="月缴存额" v-if="formFristback.cljg === 'success'">
                 <el-input v-model="formFristback.monpaysum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
@@ -418,6 +441,13 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
+              <el-form-item label="账户名称" v-if="formFristback.cljg === 'success'">
+                <el-input v-model="formFristback.accnumname" placeholder="请输入" class="uniform-width"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
               <el-form-item label="银行账号" v-if="formFristback.cljg === 'success'">
                 <el-input v-model="formFristback.bankaccnum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
@@ -426,14 +456,21 @@
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人账号" v-if="formFristback.cljg === 'success'">
-                <el-input v-model="formFristback.reviewUser" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFristback.jbr" placeholder="请输入" class="uniform-width"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
+              <el-form-item label="经办人姓名" v-if="formFristback.cljg === 'success'">
+                <el-input v-model="formFristback.jbrxm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人证件号码" v-if="formFristback.cljg === 'success'">
-                <el-input v-model="formFristback.reviewUserId" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFristback.jbrzjhm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -442,13 +479,19 @@
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item> -->
       </el-form>
+      </div>
+      </template>
       <div class="form-tip">附件列表信息</div>
       <el-table :data="tableDataFrist" border style="width: 100%">
         <el-table-column label="序号" type="index" width="200"> </el-table-column>
-        <el-table-column prop="wjlx" label="文件类型" width="200"> </el-table-column>
+        <el-table-column prop="wjlx" label="文件类型" width="200">
+          <template slot-scope="scope"> 
+          <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
+        </template>
+        </el-table-column>
         <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
             <el-button @click="downloadFile(scope.row)" type="text" size="small">下载</el-button>
           </template>
@@ -699,42 +742,42 @@
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="提取本金" v-if="formSecondback.cljg === 'success'">
-                <el-input v-model="formSecondback.drawamt" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formSecondback.withdrawalPrincipal" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="提取利息" v-if="formSecondback.cljg === 'success'">
-                <el-input v-model="formSecondback.afbalance" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formSecondback.withdrawalInterest" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="咨询电话" v-if="formSecondback.cljg === 'success'">
-                <el-input v-model="formSecondback.newbycode" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formSecondback.reviewOrgTel" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人账号" v-if="formSecondback.cljg === 'success'">
-                <el-input v-model="formSecondback.reviewUser" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formSecondback.jbr" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人姓名" v-if="formSecondback.cljg === 'success'">
-                <el-input v-model="formSecondback.reviewUser" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formSecondback.jbrxm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人证件号码" v-if="formSecondback.cljg === 'success'">
-                <el-input v-model="formSecondback.reviewUserId" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formSecondback.jbrsfzh" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -746,10 +789,14 @@
       <div class="form-tip">附件列表信息</div>
       <el-table :data="tableDataFrist" border style="width: 100%">
         <el-table-column label="序号" type="index" width="200"> </el-table-column>
-        <el-table-column prop="wjlx" label="文件类型" width="200"> </el-table-column>
+        <el-table-column prop="wjlx" label="文件类型" width="200">
+          <template slot-scope="scope"> 
+            <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
+          </template>  
+        </el-table-column>
         <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
             <el-button @click="downloadFile(scope.row)" type="text" size="small">下载</el-button>
           </template>
@@ -834,10 +881,14 @@
       <div class="form-tip">附件列表信息</div>
       <el-table :data="tableDataFrist" border style="width: 100%">
         <el-table-column label="序号" type="index" width="200"> </el-table-column>
-        <el-table-column prop="wjlx" label="文件类型" width="200"> </el-table-column>
+        <el-table-column prop="wjlx" label="文件类型" width="200">
+          <template slot-scope="scope"> 
+            <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
+          </template>
+       </el-table-column>
         <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
             <el-button @click="downloadFile(scope.row)" type="text" size="small">下载</el-button>
           </template>
@@ -1030,9 +1081,6 @@
             </div>
           </el-col>
         </el-row>
-        <!-- <el-form-item class="dialog-button">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item> -->
       </el-form>
       <div class="form-tip">反馈信息</div>
       <el-form :model="formThirdback" ref="myFormfrist" label-width="120px" size="mini" class="demo-form-inline">
@@ -1099,6 +1147,13 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
+              <el-form-item label="每月约定扣款日" v-if="formThirdback.cljg === 'success'">
+                <el-input v-model="formThirdback.day" placeholder="请输入" class="uniform-width"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
               <el-form-item label="月缴存额" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.monpaysum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
@@ -1107,31 +1162,37 @@
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="所属银行" v-if="formThirdback.cljg === 'success'">
-                <el-select v-model="formThirdback.swtyhdm" placeholder="请选择" style="width: 100%">
-                  <el-option label="个人开户、个人启封" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                <el-select v-model="formThirdback.swtyhdm" clearable placeholder="请选择" style="width: 100%">
+                  <el-option v-for="item in DEPOSIT_INTO_BANK" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="银行账号" v-if="formThirdback.status1 === 'success'">
-                <el-input v-model="formThirdback.bankaccnum" placeholder="请输入" class="uniform-width"></el-input>
+              <el-form-item label="账户名称" v-if="formThirdback.cljg === 'success'">
+                <el-input v-model="formThirdback.accnumname" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人账号" v-if="formThirdback.status1 === 'success'">
-                <el-input v-model="formThirdback.reviewUser" placeholder="请输入" class="uniform-width"></el-input>
+              <el-form-item label="经办人账号" v-if="formThirdback.cljg === 'success'">
+                <el-input v-model="formThirdback.jbr" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人证件号码" v-if="formThirdback.status1 === 'success'">
-                <el-input v-model="formThirdback.reviewUserId" placeholder="请输入" class="uniform-width"></el-input>
+              <el-form-item label="经办人姓名" v-if="formThirdback.cljg === 'success'">
+                <el-input v-model="formThirdback.jbrxm" placeholder="请输入" class="uniform-width"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
+              <el-form-item label="经办人证件号码" v-if="formThirdback.cljg === 'success'">
+                <el-input v-model="formThirdback.jbrzjhm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -1143,10 +1204,14 @@
       <div class="form-tip">附件列表信息</div>
       <el-table :data="tableDataFrist" border style="width: 100%">
         <el-table-column label="序号" type="index" width="200"> </el-table-column>
-        <el-table-column prop="wjlx" label="文件类型" width="200"> </el-table-column>
+        <el-table-column prop="wjlx" label="文件类型" width="200"> 
+          <template slot-scope="scope"> 
+          <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
+        </template>
+        </el-table-column>
         <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
             <el-button @click="downloadFile(scope.row)" type="text" size="small">下载</el-button>
           </template>
@@ -1397,42 +1462,42 @@
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="提取本金" v-if="formFourthback.cljg === 'success'">
-                <el-input v-model="formFourthback.drawamt" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFourthback.withdrawalPrincipal" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="提取利息" v-if="formFourthback.cljg === 'success'">
-                <el-input v-model="formFourthback.int" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFourthback.withdrawalInterest" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="咨询电话" v-if="formFourthback.cljg === 'success'">
-                <el-input v-model="formFourthback.reviewUser" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFourthback.reviewOrgTel" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人账号" v-if="formFourthback.cljg === 'success'">
-                <el-input v-model="formFourthback.reviewUser" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFourthback.jbr" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人姓名" v-if="formFourthback.cljg === 'success'">
-                <el-input v-model="formFourthback.reviewUser" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFourthback.jbrxm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
               <el-form-item label="经办人证件号码" v-if="formFourthback.cljg === 'success'">
-                <el-input v-model="formFourthback.reviewUserId" placeholder="请输入" class="uniform-width"></el-input>
+                <el-input v-model="formFourthback.jbrsfzh" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
@@ -1444,19 +1509,19 @@
       <div class="form-tip">附件列表信息</div>
       <el-table :data="tableDataFrist" border style="width: 100%">
         <el-table-column label="序号" type="index" width="200"> </el-table-column>
-        <el-table-column prop="wjlx" label="文件类型" width="200"> </el-table-column>
+        <el-table-column prop="wjlx" label="文件类型" width="200">
+          <template slot-scope="scope"> 
+            <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
+          </template>
+        </el-table-column>
         <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
             <el-button @click="downloadFile(scope.row)" type="text" size="small">下载</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <!-- <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div> -->
     </el-dialog>
 
     <!-- 第三个反馈弹框 企业破产-->
@@ -1500,9 +1565,6 @@
             </div>
           </el-col>
         </el-row>
-        <!-- <el-form-item class="dialog-button">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item> -->
       </el-form>
       <div class="form-tip">反馈信息</div>
       <el-form :model="formSixback" ref="myFormfrist" label-width="120px" size="mini" class="demo-form-inline">
@@ -1548,29 +1610,30 @@
       <div class="form-tip">附件列表信息</div>
       <el-table :data="tableDataFrist" border style="width: 100%">
         <el-table-column label="序号" type="index" width="200"> </el-table-column>
-        <el-table-column prop="wjlx" label="文件类型" width="200"> </el-table-column>
+        <el-table-column prop="wjlx" label="文件类型" width="200">
+          <template slot-scope="scope"> 
+            <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
+          </template>  
+        </el-table-column>
         <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
             <el-button @click="downloadFile(scope.row)" type="text" size="small">下载</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <!-- <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div> -->
     </el-dialog>
   </div>
   <!-- <FristDialog :visible.sync="dialogVisible"></FristDialog> -->
 </template>
 <script>
-import { listSq, listQq, getSq } from '@/api/sq'
+import { listSq, listQq, getSq, listOb } from '@/api/sq'
 // 导入JSON文件
 import bank from '@/data/bank.json'
 import * as constants from '@/data/constants.js';  
 import zjlx from '@/data/zjlx.json'
+import wjlx from '@/data/wjlx.json'
 import bjlx from '@/data/bjlx.json'
 import city from '@/data/city.json'
 import statusMap from '@/data/statusMap.json'
@@ -1585,6 +1648,8 @@ export default {
   },
   data() {
     return {
+      zxbh:null,//中心编号
+      idCardNumber:null,//id
       fileList: [], // 已选文件列表  
       fileBase64: '', // 存储文件的Base64编码  
       fileName: '', // 存储文件名  
@@ -1592,6 +1657,7 @@ export default {
       disabledButton: false, //禁用反馈
       disabledButton: false, //禁用反馈
       // 字典数据对象
+      wjlx:wjlx,
       bank: bank,
       DOCUMENT_TYPE: constants.DOCUMENT_TYPE,// 证件类型
       GENDER: constants.GENDER,// 性别
@@ -1631,6 +1697,7 @@ export default {
         resource: '',
         desc: ''
       },
+      showBack:true,//隐藏反馈信息
       formLabelWidth: '120px',
       dialogVisible: false, //第一个弹框
       labelPosition: 'right',
@@ -1640,13 +1707,13 @@ export default {
       total: 0, // 总记录数，从后端获取
       // 首页表单
       formInline: {
-        sqrq: null,
+        sqrq: [this.formatDate(),this.formatDate1()],
         id: null,
         applytype: null,
         khmc: null,
-        zjlx: null,
+        zjlx: [],
         zjhm: null,
-        status: null,
+        status: [],
         // ksrq: sqrq[0],
         // jsrq: sqrq[1],
         jbr: null,
@@ -1654,346 +1721,206 @@ export default {
       },
       //个人创业就业浏览-申报信息表单
       formFrist: {
-        id: '',
-        applyType: '',
-        applicantIdnumber: '',
-        applicantName: '',
-        name: '',
-        mobile: '',
-        idCardType: '',
-        idCardNumber: '',
-        gender: '',
-        nation: '',
-        birthday: '',
-        maritalStatus: '',
-        householdType: '',
-        householdLocation: '',
-        address: '',
-        householdAreaCode: '',
-        addressAreaCode: '',
-        isAccountOpen: '',
-        isAccountUnsealing: '',
-        profession: '',
-        bankName: '',
-        bankAccount: '',
-        payMethod: '',
-        monthlyAmount: '',
-        paymentDueDate: '',
-        depositBase: '',
-        depositRatio: '',
-        education: '',
-        postalCode: '',
-        monthlyIncome: '',
-        telephone: '',
-        areaCode: '',
-        createtime: '',
-        status: '',
-        sign: '',
-        attachmentList: '',
-        eventId: '',
-        attName: '',
-        attType: '',
-        applyPage: '',
-        createDate: '',
-        fileBase64: '',
-        sign: ''
+        applicantIdnumber:null,// 申报对象证件号码
+        applicantName:null,// 申报对象名称
+        name:null,// 姓名
+        idCardType:null,// 证件类型
+        gender:null,// 性别
+        nation:null,//民族 
+        maritalStatus:null,// 婚姻状况
+        householdType:null,// 户口性质
+        address:null,// 居住详细住址
+        householdLocation:null,// 户籍所在地
+        isAccountOpen:null,// 业务类型 个人开户、个人启封
+        isAccountUnsealing:null,// 业务类型 个人账户启封
+        profession:null,// 职业
+        bankAccount:null,// 缴存银行账户
+        payMethod:null,// 缴款方式
+        monthlyAmount:null,// 月缴存额
+        depositBase:null,// 缴存基数
+        education:null,// 学历
+        postalCode:null,// 邮政编码
+        telephone:null,// 固定电话号码
+        areaCode:null,// 经办机构所在地
       },
       //个人创业就业浏览-反馈信息表单
       formFristback: {
-        zxbh: '',
-        id: '',
-        cljg: '',
-        busiid: '',
-        fkwj: '',
-        sjyy: '',
-        unitaccnum: '',
-        accname: '',
-        certitype: '',
-        marrstate: '',
-        TranDate: '',
-        accnum: '',
-        relphone: '',
-        certinum: '',
-        accname: '',
-        day: '',
-        monpaysum: '',
-        swtyhdm: '',
-        accnumname: '',
-        bankaccnum: '',
-        reviewUser: '',
-        reviewUserId: ''
+        cljg: null,//处理结果
+        busiid: null,//业务序号
+        sjyy: null,//失败原因
+        unitaccnum:null,//单位账号
+        TranDate: null,//办理日期
+        accnum: null,//个人账号 扣款账户名称 
+        relphone: null,//手机号码
+        certinum: null,
+        accname: null,
+        day: null,//每月约定扣款日
+        monpaysum: null,//月缴存额
+        swtyhdm: null,//所属银行
+        accnumname: null,//账户名称
+        jbr:null,//经办人账号
+        jbrxm:null,//经办人姓名
+        jbrsfzh:null,//经办人证件号码
       },
       //个人退休浏览-申报信息表单
       formSecond: {
-        personalStatus:'',
-        isRetire:'',
-        id: '',
-        applyType: '',
-        applicantIdnumber: '',
-        applicantName: '',
-        name: '',
-        mobile: '',
-        idCardType: '',
-        idCardNumber: '',
-        birthday: '',
-        householdAreaCode: '',
-        takeInsuranceAreaCode: '',
-        companyName: '',
-        socialCreditCode: '',
-        companyNumber: '',
-        personNumber: '',
-        personType: '',
-        isOnleyChild: '',
-        personnelFileOrg: '',
-        personnelFileOrgTel: '',
-        bankName: '',
-        bankAccount: '',
-        reason: '',
-        areaCode: '',
-        createtime: '',
-        status: '',
-        sign: '',
-        attachmentList: '',
-        eventId: '',
-        attName: '',
-        attType: '',
-        applyPage: '',
-        createDate: '',
-        fileBase64: '',
-        sign: '',
-        Sftx: '',
-        Txsj: ''
+        applicantIdnumber:null,//申报对象证件号码
+        applicantName:null,//申报对象名称
+        mobile:null,//联系电话
+        name:null,//姓名
+        idCardType:null,//证件类型
+        idCardNumber:null,//证件号码
+        bankAccount:null,//缴存银行卡号
+        bankName:null,//公积金缴存银行
+        bankName:null,//公积金缴存银行名称
+        companyName:null,//单位名称
+        socialCreditCode:null,//单位统一社会信用代码
+        householdAreaCode:null,//户籍所在地
+        isRetire:null,//退休标识
+        companyName:null,//主管单位名称
+        socialCreditCode:null,//主管单位统一社会信用代码
+        personalStatus:null,//人员类别
+        personnelFileOrg:null,//人事档案保管机构名称
+        personnelFileOrgTel:null,//人事档案保管机构联系电话
+        personType:null,//人员类型
+        isOnleyChild:null,//是否独生子女父母
+        Txsj:null,//退休时间
+        createtime:null,//创建时间
       },
       //企业破产核查浏览-申报信息表单
       formFifth: {
-        xh:'',
-        qymc:'',
-        tyshxydm:'',
-        qhdm:'',
-        jbrsfzh:'',
-        hcdwdm:'',
-        jbr_sfzh:'',
-        zt:'',
-        kssj:'',
-        jssj:'',
-        hcry:'',
+        qymc:null,//企业名称
+        tyshxydm:null,//统一社会信用代码
+        jbrsfzh:null,//经办人身份证号
+        jbr_sfzh:null,//经办人身份证号
       },
       //企业破产核查浏览-反馈信息表单
       formFifthback: {
         zxbh:'',
         id:'',
         cljg:'',
-        fkwj:'',
         sjyy:'',
-
       },
       //个人退休浏览-反馈信息表单
       formSecondback: {
-        zxbh: '',
-        id: '',
-        cljg: '',
-        busiid: '',
-        fkwj: '',
-        sjyy: '',
-        appnum: '',
-        Ywly: '',
-        accname: '',
-        unitaccname: '',
-        drawreason: '',
-        superbank: '',
-        rawamt: '',
-        drawamt: '',
-        transaccnum: '',
-        date: '',
-        certinum: '',
-        accnum: '',
-        unitaccnum: '',
-        newbycode: '',
-        bfbalance: '',
-        drawamt: '',
-        afbalance: '',
-        int: '',
-        reviewUserId: '',
-        reviewUser: ''
+        applicantIdnumber:null,//申报对象证件号码
+        applicantName:null,//申报对象名称
+        mobile:null,//联系电话
+        name:null,//姓名
+        idCardType:null,//证件类型
+        idCardNumber:null,//证件号码
+        bankAccount:null,//缴存银行卡号
+        bankName:null,//公积金缴存银行
+        bankName:null,//公积金缴存银行名称
+        companyName:null,//单位名称
+        socialCreditCode:null,//单位统一社会信用代码
+        householdAreaCode:null,//户籍所在地
+        isRetire:null,//退休标识
+        companyName:null,//主管单位名称
+        socialCreditCode:null,//主管单位统一社会信用代码
+        personalStatus:null,//人员类别
+        personnelFileOrg:null,//人事档案保管机构名称
+        personnelFileOrgTel:null,//人事档案保管机构联系电话
+        personType:null,//人员类型
+        isOnleyChild:null,//是否独生子女父母
+        Txsj:null,//退休时间
+        createtime:null,//创建时间
       },
       //个人创业就业反馈-申报信息表单
       formThird: {
-        id: '',
-        applyType: '',
-        applicantIdnumber: '',
-        applicantName: '',
-        name: '',
-        mobile: '',
-        idCardType: '',
-        idCardNumber: '',
-        gender: '',
-        nation: '',
-        birthday: '',
-        maritalStatus: '',
-        householdType: '',
-        householdLocation: '',
-        address: '',
-        householdAreaCode: '',
-        addressAreaCode: '',
-        isAccountOpen: '',
-        isAccountUnsealing: '',
-        profession: '',
-        bankName: '',
-        bankAccount: '',
-        payMethod: '',
-        monthlyAmount: '',
-        paymentDueDate: '',
-        depositBase: '',
-        depositRatio: '',
-        education: '',
-        postalCode: '',
-        monthlyIncome: '',
-        telephone: '',
-        areaCode: '',
-        createtime: '',
-        status: '',
-        sign: '',
-        attachmentList: '',
-        eventId: '',
-        attName: '',
-        attType: '',
-        applyPage: '',
-        createDate: '',
-        fileBase64: '',
-        sign: ''
+        applicantIdnumber:null,// 申报对象证件号码
+        applicantName:null,// 申报对象名称
+        name:null,// 姓名
+        idCardType:null,// 证件类型
+        gender:null,// 性别
+        nation:null,//民族 
+        maritalStatus:null,// 婚姻状况
+        householdType:null,// 户口性质
+        address:null,// 居住详细住址
+        householdLocation:null,// 户籍所在地
+        isAccountOpen:null,// 业务类型 个人开户、个人启封
+        isAccountUnsealing:null,// 业务类型 个人账户启封
+        profession:null,// 职业
+        bankAccount:null,// 缴存银行账户
+        payMethod:null,// 缴款方式
+        monthlyAmount:null,// 月缴存额
+        depositBase:null,// 缴存基数
+        education:null,// 学历
+        postalCode:null,// 邮政编码
+        telephone:null,// 固定电话号码
+        areaCode:null,// 经办机构所在地
       },
       //个人创业就业反馈-反馈信息表单
       formThirdback: {
-        zxbh: '',
-        id: '',
-        cljg: '',
-        busiid: '',
-        fkwj: '',
-        sjyy: '',
-        unitaccnum: '',
-        accname: '',
-        certitype: '',
-        marrstate: '',
-        TranDate: '',
-        accnum: '',
-        relphone: '',
-        certinum: '',
-        accname: '',
-        day: '',
-        monpaysum: '',
-        swtyhdm: '',
-        accnumname: '',
-        bankaccnum: '',
-        reviewUser: '',
-        reviewUserId: ''
+        cljg: null,//处理结果
+        busiid: null,//业务序号
+        sjyy: null,//失败原因
+        TranDate: null,//办理日期
+        accnum: null,//个人账号 扣款账户名称 
+        relphone: null,//手机号码
+        certinum: null,
+        accname: null,
+        day: null,//每月约定扣款日
+        monpaysum: null,//月缴存额
+        swtyhdm: null,//所属银行
+        accnumname: null,//账户名称
+        jbr:null,//经办人账号
+        jbrxm:null,//经办人姓名
+        jbrsfzh:null,//经办人证件号码
       },
       //个人退休反馈-申报信息表单
       formFourth: {
-        id: '',
-        applyType: '',
-        applicantIdnumber: '',
-        applicantName: '',
-        name: '',
-        mobile: '',
-        idCardType: '',
-        idCardNumber: '',
-        birthday: '',
-        householdAreaCode: '',
-        takeInsuranceAreaCode: '',
-        companyName: '',
-        socialCreditCode: '',
-        companyNumber: '',
-        personNumber: '',
-        personType: '',
-        isOnleyChild: '',
-        personnelFileOrg: '',
-        personnelFileOrgTel: '',
-        bankName: '',
-        bankAccount: '',
-        reason: '',
-        areaCode: '',
-        createtime: '',
-        status: '',
-        sign: '',
-        attachmentList: '',
-        eventId: '',
-        attName: '',
-        attType: '',
-        applyPage: '',
-        createDate: '',
-        fileBase64: '',
-        sign: '',
-        Sftx: '',
-        Txsj: ''
+        applicantIdnumber:null,//申报对象证件号码
+        applicantName:null,//申报对象名称
+        mobile:null,//联系电话
+        name:null,//姓名
+        idCardType:null,//证件类型
+        idCardNumber:null,//证件号码
+        bankAccount:null,//缴存银行卡号
+        bankName:null,//公积金缴存银行
+        bankName:null,//公积金缴存银行名称
+        companyName:null,//单位名称
+        socialCreditCode:null,//单位统一社会信用代码
+        householdAreaCode:null,//户籍所在地
+        isRetire:null,//退休标识
+        companyName:null,//主管单位名称
+        socialCreditCode:null,//主管单位统一社会信用代码
+        personalStatus:null,//人员类别
+        personnelFileOrg:null,//人事档案保管机构名称
+        personnelFileOrgTel:null,//人事档案保管机构联系电话
+        personType:null,//人员类型
+        isOnleyChild:null,//是否独生子女父母
+        Txsj:null,//退休时间
+        createtime:null,//创建时间
       },
       //个人退休反馈-反馈信息表单
       formFourthback: {
-        zxbh: '',
-        id: '',
-        cljg: '',
-        busiid: '',
-        fkwj: '',
-        sjyy: '',
-        appnum: '',
-        Ywly: '',
-        accname: '',
-        unitaccname: '',
-        drawreason: '',
-        superbank: '',
-        rawamt: '',
-        drawamt: '',
-        transaccnum: '',
-        date: '',
-        certinum: '',
-        accnum: '',
-        unitaccnum: '',
-        newbycode: '',
-        bfbalance: '',
-        drawamt: '',
-        afbalance: '',
-        int: '',
-        reviewUserId: '',
-        reviewUser: ''
+        cljg: null,//处理结果
+        busiid: null,//业务序号
+        sjyy: null,//失败原因
+        TranDate: null,//办理日期
+        accnum: null,//个人账号 扣款账户名称 
+        relphone: null,//手机号码
+        certinum: null,
+        accname: null,
+        day: null,//每月约定扣款日
+        monpaysum: null,//月缴存额
+        swtyhdm: null,//所属银行
+        accnumname: null,//账户名称
+        jbr:null,//经办人账号
+        jbrxm:null,//经办人姓名
+        jbrsfzh:null,//经办人证件号码
+
+        withdrawalPrincipal:null,//提取本金
+        withdrawalInterest:null,//提取利息
+        reviewOrgTel:null,//咨询电话
       },
       //企业破产核查-申报信息表单
       formSix: {
-
-        id: '',
-        applyType: '',
-        applicantIdnumber: '',
-        applicantName: '',
-        name: '',
-        mobile: '',
-        idCardType: '',
-        idCardNumber: '',
-        birthday: '',
-        householdAreaCode: '',
-        takeInsuranceAreaCode: '',
-        companyName: '',  
-        socialCreditCode: '',
-        companyNumber: '',
-        personNumber: '',
-        personType: '',
-        isOnleyChild: '',
-        personnelFileOrg: '',
-        personnelFileOrgTel: '',
-        bankName: '',
-        bankAccount: '',
-        reason: '',
-        areaCode: '',
-        createtime: '',
-        status: '',
-        sign: '',
-        attachmentList: '',
-        eventId: '',
-        attName: '',
-        attType: '',
-        applyPage: '',
-        createDate: '',
-        fileBase64: '',
-        sign: '',
-        Sftx: '',
-        Txsj: ''
+        qymc:null,//企业名称
+        tyshxydm:null,//统一社会信用代码
+        jbrsfzh:null,//经办人身份证号
+        jbr_sfzh:null,//经办人身份证号
       },
       //企业破产核查-反馈信息表单
       formSixback: {
@@ -2001,28 +1928,7 @@ export default {
         id: '',
         cljg: '',
         busiid: '',
-        fkwj: '',
         sjyy: '',
-        appnum: '',
-        Ywly: '',
-        accname: '',
-        unitaccname: '',
-        drawreason: '',
-        superbank: '',
-        rawamt: '',
-        drawamt: '',
-        transaccnum: '',
-        date: '',
-        certinum: '',
-        accnum: '',
-        unitaccnum: '',
-        newbycode: '',
-        bfbalance: '',
-        drawamt: '',
-        afbalance: '',
-        int: '',
-        reviewUserId: '',
-        reviewUser: ''
       },
       tableData: [],
       //个人就业创业一件事浏览
@@ -2036,10 +1942,10 @@ export default {
         applytype: null,
         applytypedesc: null,
         khmc: null,
-        zjlx: null,
+        zjlx: [],
         zjlxdesc: null,
         zjhm: null,
-        status: null,
+        status: ['1'],
         statusdesc: null,
         sqrq: null,
         cjsj: null,
@@ -2063,13 +1969,53 @@ export default {
       }
     }
   },
+  computed: {  
+    // 计算开始时间  
+    defaultStartTime() {  
+      const now = new Date();  
+      now.setMonth(now.getMonth() - 1); // 设置为一个月前  
+      console.log(now,'now-----');
+      
+      return this.formatDate(now);  
+    },  
+    // 计算结束时间（当前日期）  
+    defaultEndTime() {  
+      const now = new Date();  
+      console.log(now,'now=====');
+      return this.formatDate(now);  
+    },  
+    
+  },
   created() {
+    // 组件创建时，将计算出的时间赋值给表单模型  
+    // this.formInline.sqrq[0] = this.formatDate();  
+    // this.formInline.sqrq[1] = this.formatDate1(); 
     this.getList()
   },
   mounted() {
+    // this.formInline.sqrq[0] = this.formatDate();  
+    // this.formInline.sqrq[1] = this.formatDate1(); 
     // this.init()
   },
   methods: {
+     // 格式化日期  
+     formatDate() { 
+      const date = new Date();  
+      date.setMonth(date.getMonth() - 1); // 设置为一个月前  
+      const year = date.getFullYear().toString().padStart(4, '0');  
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');  
+      const day = date.getDate().toString().padStart(2, '0');  
+      console.log(year,month,day,'date111111==================');
+      return `${year}-${month}-${day}`;  
+    },
+    formatDate1() { 
+      const date = new Date();   
+      const year = date.getFullYear().toString().padStart(4, '0');  
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');  
+      const day = date.getDate().toString().padStart(2, '0');  
+      console.log(year,month,day,'date2222==================');
+      return `${year}-${month}-${day}`;  
+    },
      // 在文件上传前执行（但我们不立即上传，所以这里主要为了显示错误消息）  
     beforeUpload(file) {  
       const isLt2M = file.size / 1024 / 1024 < 2;  
@@ -2191,6 +2137,12 @@ export default {
     // 浏览
     browse(e) {
       console.log(e, 'eeeeeee')
+      // if (e.status == '1' | e.status == '2') {
+      //   this.showBack =false
+      // } else {
+      //   this.showBack =true
+      // }
+      this.showBack = true
       let params ={
         zxbh:e.zxbh,
         id:e.id
@@ -2327,13 +2279,75 @@ export default {
         this.dialogFormVisible_4 = true //第三个浏览弹框
       }
     },
-    // 提交
+    // 反馈提交
     onSubmit() {
-      console.log(e, 'eeeeeee')
+      // formThirdback:个人创业发聩
+      let jsonString_1 = {
+        cljg: null,//处理结果
+        busiid: null,//业务序号
+        sjyy: null,//失败原因
+        TranDate: null,//办理日期
+        unitaccnum:null,//单位账号
+        accnum: null,//个人账号 扣款账户名称 
+        relphone: null,//手机号码
+        certinum: null,
+        accname: null,
+        day: null,//每月约定扣款日
+        monpaysum: null,//月缴存额
+        swtyhdm: null,//所属银行
+        accnumname: null,//账户名称
+        jbr:null,//经办人账号
+        jbrxm:null,//经办人姓名
+        jbrsfzh:null,//经办人证件号码
+
+        withdrawalPrincipal:null,//提取本金
+        withdrawalInterest:null,//提取利息
+        reviewOrgTel:null,//咨询电话
+      }
+      let jsonstring = JSON.stringify(jsonString_1); 
+      let params = {
+        // sq表 更新
+        sqData:{
+        jbr:null,
+        jbrxm:null,
+        jbrzjhm:null,
+        busiid:null,
+        fkrq:null,
+        fksj:null,
+        status:null,
+        zxbh:this.zxbh,
+        id:this.id,
+        },
+        //  更新 data
+        fbData:{
+        zxbh:null,
+        id:null,
+        fksj:jsonstring
+        },
+        // file 新增
+        fbFile:{
+        wjlx:'1',
+        wjmc:null,
+        wjsj:null,
+        zxbh:null,
+        id:null,
+        cjsj:null,
+        }
+      }
+      listOb(params).then(response => {
+        console.log(response,'反馈提交');
+        if (response.code == '200' && response.data) {
+          Message.success('反馈提交成功！')
+        } else {
+          Message.error('反馈提交失败！')
+        }
+      })
     },
     // 反馈 办件状态 为 3-反馈成功 4-反馈失败 5-外呼成功 6-外呼失败' 时，才显示。
     feedback(e) {
       console.log('反馈--', e)
+      this.zxbh = e.zxbh
+      this.id = e.id
       let params ={
         zxbh:e.zxbh,
         id:e.id
@@ -2458,7 +2472,7 @@ export default {
     // 重置
     reset() {
       this.formInline = {
-        sqrq: null,
+        sqrq: [this.formatDate(),this.formatDate1()],
         id: null,
         applytype: null,
         khmc: null,

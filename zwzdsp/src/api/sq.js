@@ -1,17 +1,25 @@
 import request from '@/utils/request'
 
 // 查询政务数据直达系统办件申请信息列表
-export function listSq(query) {
+export function listSq(data) {
   return request({
-    url: '/zwsj/sq/list',
-    method: 'get',
-    params: query
+    url: '/zwsj/zwsjcx/list',
+    method: 'post',
+    data: data
   })
 }
 // 浏览查询
 export function listQq(data) {
   return request({
-    url: '/zwsj/sq/queryById',
+    url: '/zwsj/zwsjcx/queryById',
+    method: 'post',
+    params: data
+  })
+}
+// 反馈/zwsj/zwsjcx/feedback
+export function listOb(data) {
+  return request({
+    url: '/zwsj/zwsjcx/feedback',
     method: 'post',
     params: data
   })
