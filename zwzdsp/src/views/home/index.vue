@@ -489,7 +489,7 @@
           <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
         </template>
         </el-table-column>
-        <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
+        <el-table-column prop="wjmc" label="文件名称" show-overflow-tooltip width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
@@ -794,7 +794,7 @@
             <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
           </template>  
         </el-table-column>
-        <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
+        <el-table-column prop="wjmc" label="文件名称" show-overflow-tooltip width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
@@ -873,6 +873,21 @@
               </el-form-item>
             </div>
           </el-col>
+          <el-col :span="8">  
+          <el-upload  
+            class="upload-demo"  
+            :action="''" 
+            :before-upload="beforeUpload" 
+            :on-change="handleChange"  
+            :file-list="fileList" 
+            :limit="1"  
+            :auto-upload="false"  
+            :on-remove="handleRemove" 
+            >  
+            <el-button size="small" type="primary">点击上传</el-button>  
+            <div slot="tip" class="el-upload__tip">只能上传pdf、jpg、png文件，且不超过2mb</div>  
+          </el-upload>  
+        </el-col>
         </el-row>
         <!-- <el-form-item class="dialog-button">
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -886,7 +901,7 @@
             <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
           </template>
        </el-table-column>
-        <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
+        <el-table-column prop="wjmc" label="文件名称" show-overflow-tooltip width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
@@ -907,6 +922,7 @@
       top="10vh"
       :visible.sync="dialogFormVisible_1"
       class="dialog-frist"
+      :before-close="handleClose"
     >
       <div class="form-tip">申报信息</div>
       <el-form
@@ -1083,12 +1099,12 @@
         </el-row>
       </el-form>
       <div class="form-tip">反馈信息</div>
-      <el-form :model="formThirdback" ref="myFormfrist" label-width="120px" size="mini" class="demo-form-inline">
+      <el-form :model="formThirdback" ref="myFormThirdback" :rules="rules1" label-width="120px" size="mini" class="demo-form-inline">
         <!-- <el-row :gutter="20">  -->
         <el-row>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="处理结果">
+              <el-form-item label="处理结果"  prop="cljg">
                 <el-select v-model="formThirdback.cljg" clearable placeholder="请选择" style="width: 100%">
                   <el-option label="成功" value="success"></el-option>
                   <el-option label="失败" value="fail"></el-option>
@@ -1098,70 +1114,70 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="失败原因" v-if="formThirdback.cljg === 'fail'">
+              <el-form-item label="失败原因" prop="sjyy" v-if="formThirdback.cljg === 'fail'">
                 <el-input v-model="formThirdback.sjyy" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="业务序号" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="业务序号" prop="busiid" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.busiid" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="单位账号" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="单位账号" prop="unitaccnum" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.unitaccnum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="办理日期" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="办理日期" prop="TranDate"  v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.TranDate" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="个人账号" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="个人账号" prop="accnum" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.accnum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="手机号码" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="手机号码" prop="relphone" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.relphone" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="扣款账户名称" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="扣款账户名称" prop="accname" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.accname" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="每月约定扣款日" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="每月约定扣款日" prop="day" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.day" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="月缴存额" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="月缴存额" prop="monpaysum" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.monpaysum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="所属银行" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="所属银行" prop="swtyhdm" v-if="formThirdback.cljg === 'success'">
                 <el-select v-model="formThirdback.swtyhdm" clearable placeholder="请选择" style="width: 100%">
                   <el-option v-for="item in DEPOSIT_INTO_BANK" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
@@ -1170,28 +1186,28 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="账户名称" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="账户名称" prop="accnumname" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.accnumname" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人账号" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="经办人账号" prop="jbr" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.jbr" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人姓名" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="经办人姓名" prop="jbrxm" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.jbrxm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人证件号码" v-if="formThirdback.cljg === 'success'">
+              <el-form-item label="经办人证件号码" prop="jbrzjhm" v-if="formThirdback.cljg === 'success'">
                 <el-input v-model="formThirdback.jbrzjhm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
@@ -1209,7 +1225,7 @@
           <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
         </template>
         </el-table-column>
-        <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
+        <el-table-column prop="wjmc" label="文件名称" show-overflow-tooltip width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
@@ -1230,6 +1246,7 @@
       top="10vh"
       :visible.sync="dialogFormVisible_3"
       class="dialog-frist"
+      :before-close="handleClose"
     >
       <div class="form-tip">申报信息</div>
       <el-form
@@ -1418,12 +1435,12 @@
         </el-form-item> -->
       </el-form>
       <div class="form-tip">反馈信息</div>
-      <el-form :model="formFourthback" ref="myFormfrist" label-width="120px" size="mini" class="demo-form-inline">
+      <el-form :model="formFourthback" ref="myFormFourthback" :rules="rulesFourthback" label-width="120px" size="mini" class="demo-form-inline">
         <!-- <el-row :gutter="20">  -->
         <el-row>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="处理结果">
+              <el-form-item label="处理结果"  prop="cljg">
                 <el-select v-model="formFourthback.cljg" clearable placeholder="请选择" style="width: 100%">
                   <el-option label="成功" value="success"></el-option>
                   <el-option label="失败" value="fail"></el-option>
@@ -1433,70 +1450,70 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="失败原因" v-if="formFourthback.cljg === 'fail'">
+              <el-form-item label="失败原因"  prop="sjyy" v-if="formFourthback.cljg === 'fail'">
                 <el-input v-model="formFourthback.sjyy" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="业务序号" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="业务序号"  prop="busiid" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.busiid" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="单位账号" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="单位账号"  prop="unitaccnum" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.unitaccnum" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="办理日期" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="办理日期"  prop="date" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.date" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="提取本金" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="提取本金"  prop="withdrawalPrincipal" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.withdrawalPrincipal" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="提取利息" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="提取利息"  prop="withdrawalInterest" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.withdrawalInterest" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="咨询电话" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="咨询电话"  prop="reviewOrgTel" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.reviewOrgTel" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人账号" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="经办人账号"  prop="jbr" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.jbr" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人姓名" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="经办人姓名"  prop="jbrxm" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.jbrxm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="经办人证件号码" v-if="formFourthback.cljg === 'success'">
+              <el-form-item label="经办人证件号码"  prop="jbrsfzh" v-if="formFourthback.cljg === 'success'">
                 <el-input v-model="formFourthback.jbrsfzh" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
@@ -1514,7 +1531,7 @@
             <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
           </template>
         </el-table-column>
-        <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
+        <el-table-column prop="wjmc" label="文件名称" show-overflow-tooltip width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
@@ -1531,6 +1548,7 @@
       top="10vh"
       :visible.sync="dialogFormVisible_5"
       class="dialog-frist"
+      :before-close="handleClose"
     >
       <div class="form-tip">申报信息</div>
       <el-form
@@ -1545,34 +1563,34 @@
         <el-row>
           <el-col :span="12">
             <div class="grid-content">
-              <el-form-item label="申报对象证件号码">
-                <el-input v-model="formSix.applicantIdnumber" placeholder="请输入" class="uniform-width"></el-input>
+              <el-form-item label="企业名称">
+                <el-input v-model="formSix.qymc" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="grid-content">
-              <el-form-item label="申报对象名称">
-                <el-input v-model="formSix.applicantName" placeholder="请输入" class="uniform-width"></el-input>
+              <el-form-item label="统一社会信用代码">
+                <el-input v-model="formSix.tyshxydm" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="grid-content">
-              <el-form-item label="联系电话">
-                <el-input v-model="formSix.mobile" placeholder="请输入" class="uniform-width"></el-input>
+              <el-form-item label="经办人身份证号">
+                <el-input v-model="formSix.jbr_sfzh" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
           </el-col>
         </el-row>
       </el-form>
       <div class="form-tip">反馈信息</div>
-      <el-form :model="formSixback" ref="myFormfrist" label-width="120px" size="mini" class="demo-form-inline">
+      <el-form :model="formSixback" ref="myFormSixback" :rules="rulesSixback" label-width="120px" size="mini" class="demo-form-inline">
         <!-- <el-row :gutter="20">  -->
         <el-row>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="处理结果">
+              <el-form-item label="处理结果"  prop="cljg">
                 <el-select v-model="formSixback.cljg" clearable placeholder="请选择" style="width: 100%">
                   <el-option label="成功" value="success"></el-option>
                   <el-option label="失败" value="fail"></el-option>
@@ -1582,7 +1600,7 @@
           </el-col>
           <el-col :span="8">
             <div class="grid-content">
-              <el-form-item label="失败原因" v-if="formSixback.cljg === 'fail'">
+              <el-form-item label="失败原因"  prop="sjyy" v-if="formSixback.cljg === 'fail'">
                 <el-input v-model="formSixback.sjyy" placeholder="请输入" class="uniform-width"></el-input>
               </el-form-item>
             </div>
@@ -1615,7 +1633,7 @@
             <span>{{ wjlx[scope.row.wjlx] || '' }}</span>  
           </template>  
         </el-table-column>
-        <el-table-column prop="wjmc" label="文件名称" width="200"> </el-table-column>
+        <el-table-column prop="wjmc" label="文件名称" show-overflow-tooltip width="200"> </el-table-column>
         <el-table-column prop="cjsj" label="创建时间" width="200"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
@@ -1628,7 +1646,7 @@
   <!-- <FristDialog :visible.sync="dialogVisible"></FristDialog> -->
 </template>
 <script>
-import { listSq, listQq, getSq, listOb } from '@/api/sq'
+import { listSq, listQq, listOb } from '@/api/sq'
 // 导入JSON文件
 import bank from '@/data/bank.json'
 import * as constants from '@/data/constants.js';  
@@ -1648,7 +1666,16 @@ export default {
   },
   data() {
     return {
+      id:null,//id
       zxbh:null,//中心编号
+      jbr:null,
+      jbrxm:null,
+      jbrzjhm:null,
+      busiid:null,
+      fkrq:null,
+      fksj:null,
+      status:null,
+
       idCardNumber:null,//id
       fileList: [], // 已选文件列表  
       fileBase64: '', // 存储文件的Base64编码  
@@ -1718,6 +1745,40 @@ export default {
         // jsrq: sqrq[1],
         jbr: null,
         busiid: null
+      },
+      rules1: {
+          cljg: [{ required: true, message: '请选择选择', trigger: 'change' }],
+          sjyy: [{ required: true, message: '请输入失败原因', trigger: 'change' }],
+          busiid: [{ required: true, message: '请输入业务序号', trigger: 'change' }],
+          unitaccnum: [{ required: true, message: '请输入单位账号', trigger: 'change' }],
+          TranDate: [{ required: true, message: '请输入办理日期', trigger: 'change' }],
+          accnum: [{ required: true, message: '请输入个人账号', trigger: 'change' }],
+          relphone: [{ required: true, message: '请输入手机号码', trigger: 'change' }],
+          accname: [{ required: true, message: '请输入扣款账户名称', trigger: 'change' }],
+          day: [{ required: true, message: '请输入每月约定扣款日', trigger: 'change' }],
+          monpaysum: [{ required: true, message: '请输入月缴存额', trigger: 'change' }],
+          swtyhdm: [{ required: true, message: '请选择所属银行', trigger: 'change' }],
+          accnumname: [{ required: true, message: '请输入账户名称', trigger: 'change' }],
+          jbr: [{ required: true, message: '请输入经办人账号', trigger: 'change' }],
+          jbrxm: [{ required: true, message: '请输入经办人姓名', trigger: 'change' }],
+          jbrzjhm: [{ required: true, message: '请输入经办人证件号码', trigger: 'change' }]
+      },
+      rulesFourthback: {
+          cljg: [{ required: true, message: '请选择选择', trigger: 'change' }],
+          sjyy: [{ required: true, message: '请输入失败原因', trigger: 'change' }],
+          busiid: [{ required: true, message: '请输入业务序号', trigger: 'change' }],
+          unitaccnum: [{ required: true, message: '请输入单位账号', trigger: 'change' }],
+          date: [{ required: true, message: '请输入办理日期', trigger: 'change' }],
+          withdrawalPrincipal: [{ required: true, message: '请输入提取本金', trigger: 'change' }],
+          withdrawalInterest: [{ required: true, message: '请输入提取利息', trigger: 'change' }],
+          reviewOrgTel: [{ required: true, message: '请输入咨询电话', trigger: 'change' }],
+          jbr: [{ required: true, message: '请输入经办人账号', trigger: 'change' }],
+          jbrxm: [{ required: true, message: '请输入经办人姓名', trigger: 'change' }],
+          jbrzjhm: [{ required: true, message: '请输入经办人证件号码', trigger: 'change' }]
+      },
+      rulesSixback: {
+          cljg: [{ required: true, message: '请选择选择', trigger: 'change' }],
+          sjyy: [{ required: true, message: '请输入失败原因', trigger: 'change' }],  
       },
       //个人创业就业浏览-申报信息表单
       formFrist: {
@@ -2102,7 +2163,7 @@ export default {
           this.tableData = response.rows
           this.total = response.total
         } else {
-          Message.error('系统错误，请联系管理员！')
+          this.$message.error('系统错误，请联系管理员');
         }
       })
     },
@@ -2130,7 +2191,7 @@ export default {
           // this.queryInfo = response.rows
           this.total = response.total
         } else {
-          Message.error('系统错误，请联系管理员！')
+          this.$message.error('系统错误，请联系管理员');
         }
       })
     },
@@ -2268,7 +2329,7 @@ export default {
             jbr_sfzh:bb.jbr_sfzh,
           }  
         } else {
-          Message.error('系统错误，请联系管理员！')
+          this.$message.error('系统错误，请联系管理员');
         }
       })
       if (e.applytype == 'job') {
@@ -2282,64 +2343,201 @@ export default {
     // 反馈提交
     onSubmit() {
       // formThirdback:个人创业发聩
-      let jsonString_1 = {
-        cljg: null,//处理结果
-        busiid: null,//业务序号
-        sjyy: null,//失败原因
-        TranDate: null,//办理日期
-        unitaccnum:null,//单位账号
-        accnum: null,//个人账号 扣款账户名称 
-        relphone: null,//手机号码
-        certinum: null,
-        accname: null,
-        day: null,//每月约定扣款日
-        monpaysum: null,//月缴存额
-        swtyhdm: null,//所属银行
-        accnumname: null,//账户名称
-        jbr:null,//经办人账号
-        jbrxm:null,//经办人姓名
-        jbrsfzh:null,//经办人证件号码
+      
+      
+      let params
+      //个人创业
+      if (this.dialogFormVisible_1) { 
+        this.$refs.myFormThirdback.validate((valid) => {
+          if (valid) {   
+            let jsonString_1
+            jsonString_1 = {
+              cljg: this.formThirdback.cljg ? this.formThirdback.cljg : null,//处理结果
+              busiid: this.formThirdback.busiid ? this.formThirdback.busiid : null,//业务序号
+              sjyy: this.formThirdback.sjyy ? this.formThirdback.sjyy : null,//失败原因
+              TranDate: this.formThirdback.TranDate ? this.formThirdback.TranDate : null,//办理日期
+              unitaccnum:null,//单位账号
+              accnum: this.formThirdback.accnum ? this.formThirdback.accnum : null,//个人账号 扣款账户名称 
+              relphone: this.formThirdback.relphone ? this.formThirdback.relphone : null,//手机号码
+              certinum: null,
+              accname: null,
+              day: this.formThirdback.day ? this.formThirdback.day : null,//每月约定扣款日
+              monpaysum: this.formThirdback.monpaysum ? this.formThirdback.monpaysum : null,//月缴存额
+              swtyhdm: this.formThirdback.swtyhdm ? this.formThirdback.swtyhdm : null,//所属银行
+              accnumname: this.formThirdback.accnumname ? this.formThirdback.accnumname : null,//账户名称
+              jbr:this.formThirdback.jbr ? this.formThirdback.jbr : null,//经办人账号
+              jbrxm:this.formThirdback.jbrxm ? this.formThirdback.jbrxm : null,//经办人姓名
+              jbrsfzh:this.formThirdback.jbrsfzh ? this.formThirdback.jbrsfzh : null,//经办人证件号码
 
-        withdrawalPrincipal:null,//提取本金
-        withdrawalInterest:null,//提取利息
-        reviewOrgTel:null,//咨询电话
+              withdrawalPrincipal:null,//提取本金
+              withdrawalInterest: null,//提取利息
+              reviewOrgTel: null,//咨询电话
+            }
+            let jsonstring = JSON.stringify(jsonString_1);
+            params = Object.assign({
+            // sq表 更新
+              sqData:{
+                jbr:this.jbr,
+                jbrxm:this.jbrxm,
+                jbrzjhm:this.jbrzjhm,
+                busiid:this.busiid,
+                fkrq:this.fkrq,
+                fksj:this.fksj,
+                status:this.status,
+                zxbh:this.zxbh,
+                id:this.id,
+              },
+              //  更新 data
+              fbData:{
+                zxbh:this.zxbh,
+                id:this.id,
+                fksj:jsonstring
+              },
+              // file 新增
+              fbFile:{
+                wjlx:null,
+                wjmc:null,
+                wjsj:null, 
+                zxbh:null,
+                id:null,
+                cjsj:null,
+              }
+            })
+              } else {  
+                console.log('error submit!!');  
+                return; // 或者你可以在这里做一些其他的错误处理  
+              } 
+            })
+        
       }
-      let jsonstring = JSON.stringify(jsonString_1); 
-      let params = {
-        // sq表 更新
-        sqData:{
-        jbr:null,
-        jbrxm:null,
-        jbrzjhm:null,
-        busiid:null,
-        fkrq:null,
-        fksj:null,
-        status:null,
-        zxbh:this.zxbh,
-        id:this.id,
-        },
-        //  更新 data
-        fbData:{
-        zxbh:null,
-        id:null,
-        fksj:jsonstring
-        },
-        // file 新增
-        fbFile:{
-        wjlx:'1',
-        wjmc:null,
-        wjsj:null,
-        zxbh:null,
-        id:null,
-        cjsj:null,
+      //个人退休
+      if (this.dialogFormVisible_3) {
+        this.$refs.myFormFourthback.validate();
+        let jsonString_1
+        jsonString_1 = {
+          cljg: this.formFourthback.cljg ? this.formFourthback.cljg : null,//处理结果
+          busiid: this.formFourthback.busiid ? this.formFourthback.busiid : null,//业务序号
+          sjyy: this.formFourthback.sjyy ? this.formFourthback.sjyy : null,//失败原因
+          TranDate: this.formFourthback.TranDate ? this.formFourthback.TranDate : null,//办理日期
+          unitaccnum:null,//单位账号
+          accnum: this.formFourthback.accnum ? this.formFourthback.accnum : null,//个人账号 扣款账户名称 
+          relphone: this.formFourthback.relphone ? this.formFourthback.relphone : null,//手机号码
+          certinum: null,
+          accname: null,
+          day: this.formFourthback.day ? this.formFourthback.day : null,//每月约定扣款日
+          monpaysum: this.formFourthback.monpaysum ? this.formFourthback.monpaysum : null,//月缴存额
+          swtyhdm: this.formFourthback.swtyhdm ? this.formFourthback.swtyhdm : null,//所属银行
+          accnumname: this.formFourthback.accnumname ? this.formFourthback.accnumname : null,//账户名称
+          jbr:this.formFourthback.jbr ? this.formFourthback.jbr : null,//经办人账号
+          jbrxm:this.formFourthback.jbrxm ? this.formFourthback.jbrxm : null,//经办人姓名
+          jbrsfzh:this.formFourthback.jbrsfzh ? this.formFourthback.jbrsfzh : null,//经办人证件号码
+
+          withdrawalPrincipal:this.formFourthback.withdrawalPrincipal ? this.formFourthback.withdrawalPrincipal : null,//提取本金
+          withdrawalInterest: this.formFourthback.withdrawalInterest ? this.formFourthback.withdrawalInterest : null,//提取利息
+          reviewOrgTel: this.formFourthback.reviewOrgTel ? this.formFourthback.reviewOrgTel : null,//咨询电话
         }
+        let jsonstring = JSON.stringify(jsonString_1);
+        params = Object.assign({
+        // sq表 更新
+          sqData:{
+            jbr:this.jbr,
+            jbrxm:this.jbrxm,
+            jbrzjhm:this.jbrzjhm,
+            busiid:this.busiid,
+            fkrq:this.fkrq,
+            fksj:this.fksj,
+            status:this.status,
+            zxbh:this.zxbh,
+            id:this.id,
+          },
+          //  更新 data
+          fbData:{
+            zxbh:this.zxbh,
+            id:this.id,
+            fksj:jsonstring
+          },
+          // file 新增
+          fbFile:{
+            wjlx:null,
+            wjmc:null,
+            wjsj:null, 
+            zxbh:null,
+            id:null,
+            cjsj:null,
+          }
+        })
       }
+      //企业核查破产
+      if (this.dialogFormVisible_5) {
+        this.$refs.myFormSixback.validate();
+        let jsonString_1
+        jsonString_1 = {
+          cljg: this.formSixback.cljg ? this.formSixback.cljg : null,//处理结果
+          busiid: this.formSixback.cljg ? this.formSixback.busiid : null,//业务序号
+          sjyy: this.formSixback.cljg ? this.formSixback.sjyy : null,//失败原因
+          TranDate: null,//办理日期
+          unitaccnum:null,//单位账号
+          accnum: null,//个人账号 扣款账户名称 
+          relphone: null,//手机号码
+          certinum: null,
+          accname: null,
+          day: null,//每月约定扣款日
+          monpaysum: null,//月缴存额
+          swtyhdm: null,//所属银行
+          accnumname: null,//账户名称
+          jbr:null,//经办人账号
+          jbrxm:null,//经办人姓名
+          jbrsfzh:null,//经办人证件号码
+
+          withdrawalPrincipal:null,//提取本金
+          withdrawalInterest:null,//提取利息
+          reviewOrgTel:null,//咨询电话
+        }
+        let jsonstring = JSON.stringify(jsonString_1);
+        params = Object.assign({
+        // sq表 更新
+          sqData:{
+            jbr:this.jbr,
+            jbrxm:this.jbrxm,
+            jbrzjhm:this.jbrzjhm,
+            busiid:this.busiid,
+            fkrq:this.fkrq,
+            fksj:this.fksj,
+            status:this.status,
+            zxbh:this.zxbh,
+            id:this.id,
+          },
+          //  更新 data
+          fbData:{
+            zxbh:this.zxbh,
+            id:this.id,
+            fksj:jsonstring
+          },
+          // file 新增
+          fbFile:{
+            wjlx:'1',
+            wjmc:this.fileName ? this.fileName : null,
+            wjsj:this.fileBase64 ? this.fileBase64 : null, 
+            zxbh:this.zxbh,
+            id:this.id,
+            cjsj:null,
+          }
+        })
+      } 
       listOb(params).then(response => {
         console.log(response,'反馈提交');
         if (response.code == '200' && response.data) {
-          Message.success('反馈提交成功！')
+          this.$message({
+            message: response.data.msg,
+            type: 'success'
+          });
+          this.handleClose()
+          this.query()
         } else {
-          Message.error('反馈提交失败！')
+          this.$message({
+            message: response.data.msg,
+            type: 'error'
+          });
         }
       })
     },
@@ -2348,6 +2546,13 @@ export default {
       console.log('反馈--', e)
       this.zxbh = e.zxbh
       this.id = e.id
+      this.status = e.status
+      this.fksj = e.fksj
+      this.fkrq = e.fkrq
+      this.busiid = e.busiid
+      this.jbrzjhm = e.jbrzjhm
+      this.jbrxm = e.jbrxm
+      this.jbr = e.jbr
       let params ={
         zxbh:e.zxbh,
         id:e.id
@@ -2452,9 +2657,9 @@ export default {
             personalStatus: bb.personalStatus,
           },
           this.formSix = {
-            applicantIdnumber:bb.applicantIdnumber,
-            applicantName:bb.applicantName,
-            mobile:bb.mobile,
+            qymc:bb.qymc,
+            tyshxydm:bb.tyshxydm,
+            jbr_sfzh:bb.jbr_sfzh,
           }
         } else {
           Message.error('系统错误，请联系管理员！')
@@ -2468,7 +2673,13 @@ export default {
         this.dialogFormVisible_5 = true //第三个反馈弹框
       }
     },
-
+    // 关闭弹框
+    handleClose() {
+      console.log('关闭弹框');
+      this.dialogFormVisible_1 = false
+      this.dialogFormVisible_3 = false
+      this.dialogFormVisible_5 = false 
+    },
     // 重置
     reset() {
       this.formInline = {

@@ -21,7 +21,7 @@ export function listOb(data) {
   return request({
     url: '/zwsj/zwsjcx/feedback',
     method: 'post',
-    params: data
+    data: data
   })
 }
 
