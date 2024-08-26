@@ -113,7 +113,10 @@
                 </t-space>
               </t-descriptions-item>
 
-              <t-descriptions-item label="业务序号">
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>业务序号</span>
+                </template>
                 <t-form-item label="" name="busiid">
                   <t-input v-model="feedbackInfo.busiid" placeholder="请输入业务序号"></t-input>
                 </t-form-item>
@@ -123,12 +126,18 @@
                   <t-input v-model="feedbackInfo.unitaccnum" placeholder="请输入单位账号"></t-input>
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="办理日期">
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>办理日期</span>
+                </template>
                 <t-form-item label="" name="date">
                   <t-date-picker style="width: 100%" v-model="feedbackInfo.date" placeholder="请选择办理日期" />
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="提取本金">
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>提取本金</span>
+                </template>
                 <t-form-item label="" name="withdrawalPrincipal">
                   <t-input-number
                     placeholder="请输入提取本金"
@@ -140,7 +149,10 @@
                   ></t-input-number>
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="提取利息">
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>提取利息</span>
+                </template>
                 <t-form-item label="" name="withdrawalInterest">
                   <t-input-number
                     style="width: 100%"
@@ -153,25 +165,88 @@
                 </t-form-item>
               </t-descriptions-item>
 
-              <t-descriptions-item label="经办人账号">
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>经办人账号</span>
+                </template>
                 <t-form-item label="" name="jbr">
                   <t-input v-model="feedbackInfo.jbr" placeholder="请输入经办人账号"></t-input>
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="经办人姓名">
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>经办人姓名</span>
+                </template>
                 <t-form-item label="" name="jbrxm">
                   <t-input v-model="feedbackInfo.jbrxm" placeholder="请输入经办人姓名"></t-input>
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="经办人证件号码">
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>经办人证件号码</span>
+                </template>
                 <t-form-item label="" name="jbrzjhm">
                   <t-input v-model="feedbackInfo.jbrzjhm" placeholder="请输入经办人证件号码"></t-input>
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="咨询电话" :span="3">
+              <t-descriptions-item :span="1">
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>承诺办结时间</span>
+                </template>
+                <t-form-item label="" name="promiseDate">
+                  <t-date-picker
+                    enable-time-picker
+                    allow-input
+                    style="width: 100%"
+                    v-model="feedbackInfo.promiseDate"
+                    placeholder="请选择承诺办结时间"
+                    clearable
+                    :disable-date="{ before: dayjs().subtract(1, 'day').format() }"
+                    :time-picker-props="timePickerProps"
+                    @pick="date => (pickDate = dayjs(date).format('YYYY-MM-DD'))"
+                  />
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item :span="2">
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>咨询电话</span>
+                </template>
                 <t-form-item label="" name="reviewOrgTel">
                   <t-input v-model="feedbackInfo.reviewOrgTel" placeholder="请输入咨询电话"></t-input>
                 </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item label="上传文件" class="feedback-form-upload">
+                <t-upload
+                  :autoUpload="false"
+                  v-model="files"
+                  theme="custom"
+                  :max="1"
+                  :abridgeName="[10, 8]"
+                  draggable
+                  :sizeLimit="{ size: 2, unit: 'MB', message: '图片太大，不能超过 {sizeLimit} MB' }"
+                  action=""
+                  accept="image/*, .pdf"
+                >
+                  <template>
+                    <div v-if="files && files.length" style="width: 100%; height: 100%">
+                      <div>
+                        <div style="margin-bottom: 10px">
+                          <span>{{ shortenFilename(files[0].name, 20) }}</span>
+                        </div>
+                        <span>文件大小:{{ formatFileSize(files[0].size) }}</span
+                        ><br />
+                        <span>上传日期:{{ date }}</span>
+                      </div>
+                      <div style="margin-top: 10px">
+                        <t-link theme="primary">重新上传</t-link>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <t-link theme="primary">点击上传</t-link><span>&nbsp;/&nbsp;拖拽到此区域</span> <br />
+                      <p>要求文件大小在 2M 以内</p>
+                    </div>
+                  </template>
+                </t-upload>
               </t-descriptions-item>
             </t-descriptions>
             <div style="width: 100%; margin-top: 20px; display: flex; justify-content: center">
@@ -183,26 +258,120 @@
         </div>
 
         <div v-if="feedbackInfo.cljg == '4'">
-          <t-descriptions :column="3" bordered colon size="small" class="feedback-form">
-            <t-descriptions-item label="处理结果">
+          <t-form
+            :data="feedbackInfo"
+            :rules="rules"
+            ref="feedbackForm"
+            @submit="handleSubmitFeedback"
+            class="feedback-form"
+          >
+            <t-descriptions :column="3" bordered colon size="small" class="feedback-form">
+              <t-descriptions-item label="处理结果">
+                <t-space>
+                  <t-radio-group v-model="feedbackInfo.cljg" @onChange="handleResultChange">
+                    <t-radio value="3">成功</t-radio>
+                    <t-radio value="4">失败</t-radio>
+                  </t-radio-group>
+                </t-space>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>业务序号</span>
+                </template>
+                <t-form-item label="" name="busiid">
+                  <t-input v-model="feedbackInfo.busiid" placeholder="请输入业务序号"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>经办人账号</span>
+                </template>
+                <t-form-item label="" name="jbr">
+                  <t-input v-model="feedbackInfo.jbr" placeholder="请输入经办人账号"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>经办人姓名</span>
+                </template>
+                <t-form-item label="" name="jbrxm">
+                  <t-input v-model="feedbackInfo.jbrxm" placeholder="请输入经办人姓名"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>经办人证件号码</span>
+                </template>
+                <t-form-item label="" name="jbrzjhm">
+                  <t-input v-model="feedbackInfo.jbrzjhm" placeholder="请输入经办人证件号码"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>承诺办结时间</span>
+                </template>
+                <t-form-item label="" name="promiseDate">
+                  <t-date-picker
+                    enable-time-picker
+                    allow-input
+                    style="width: 100%"
+                    v-model="feedbackInfo.promiseDate"
+                    placeholder="请选择承诺办结时间"
+                    clearable
+                    :disable-date="{ before: dayjs().subtract(1, 'day').format() }"
+                    :time-picker-props="timePickerProps"
+                    @pick="date => (pickDate = dayjs(date).format('YYYY-MM-DD'))"
+                  />
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item :span="3">
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>失败原因</span>
+                </template>
+                <t-textarea v-model="feedbackInfo.sjyy" placeholder="请输入失败原因" />
+              </t-descriptions-item>
+              <t-descriptions-item label="上传文件" class="feedback-form-upload">
+                <t-upload
+                  :autoUpload="false"
+                  v-model="files"
+                  theme="custom"
+                  :max="1"
+                  :abridgeName="[10, 8]"
+                  draggable
+                  :sizeLimit="{ size: 2, unit: 'MB', message: '图片太大，不能超过 {sizeLimit} MB' }"
+                  action=""
+                  accept="image/*, .pdf"
+                >
+                  <template>
+                    <div v-if="files && files.length" style="width: 100%; height: 100%">
+                      <div>
+                        <div style="margin-bottom: 10px">
+                          <span>{{ shortenFilename(files[0].name, 20) }}</span>
+                        </div>
+                        <span>文件大小:{{ formatFileSize(files[0].size) }}</span
+                        ><br />
+                        <span>上传日期:{{ date }}</span>
+                      </div>
+                      <div style="margin-top: 10px">
+                        <t-link theme="primary">重新上传</t-link>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <t-link theme="primary">点击上传</t-link><span>&nbsp;/&nbsp;拖拽到此区域</span> <br />
+                      <p>要求文件大小在 2M 以内</p>
+                    </div>
+                  </template>
+                </t-upload>
+              </t-descriptions-item>
+            </t-descriptions>
+            <div style="width: 100%; margin-top: 20px; display: flex; justify-content: center">
               <t-space>
-                <t-radio-group v-model="feedbackInfo.cljg" @onChange="handleResultChange">
-                  <t-radio value="3">成功</t-radio>
-                  <t-radio value="4">失败</t-radio>
-                </t-radio-group>
+                <t-button :loading="btnLoading" @click="handleSubmitFailFeedback"
+                  ><GestureUpIcon slot="icon" />提交反馈</t-button
+                >
               </t-space>
-            </t-descriptions-item>
-            <t-descriptions-item label="失败原因" :span="3">
-              <t-textarea v-model="feedbackInfo.sjyy" placeholder="请输入失败原因" />
-            </t-descriptions-item>
-          </t-descriptions>
-          <div style="width: 100%; margin-top: 20px; display: flex; justify-content: center">
-            <t-space>
-              <t-button :loading="btnLoading" @click="handleSubmitFailFeedback"
-                ><GestureUpIcon slot="icon" />提交反馈</t-button
-              >
-            </t-space>
-          </div>
+            </div>
+          </t-form>
         </div>
       </t-card>
       <!-- 附件列表信息 -->
@@ -253,11 +422,14 @@ import {
   AREA_CODE
 } from '../../utils/constants.js'
 import { CloudDownloadIcon, GestureUpIcon } from 'tdesign-icons-vue'
-
+import dayjs from 'dayjs'
 export default {
   components: { CloudDownloadIcon, GestureUpIcon },
   data() {
     return {
+      date: new Date().toLocaleString(),
+      files: [],
+      // isRequired: 'false',
       //按钮加载
       btnLoading: false,
 
@@ -337,14 +509,14 @@ export default {
         // 提取利息
         withdrawalInterest: null,
         // 咨询电话
-        reviewOrgTel: null,
+        reviewOrgTel: '0871-12329',
         // 经办人账号
         jbr: null,
         // 经办人姓名
         jbrxm: null,
         // 经办人证件号码
         jbrzjhm: null,
-        //承诺办件日
+        //承诺办结时间
         promiseDate: null
       },
       // 附件列表
@@ -359,14 +531,31 @@ export default {
       // 校验规则
       rules: {
         busiid: [{ required: true, message: '', type: 'error' }],
-        unitaccnum: [{ required: true, message: '', type: 'error' }],
+        unitaccnum: [{ required: false, message: '', type: 'error' }],
         date: [{ required: true, message: '', type: 'error' }],
         withdrawalPrincipal: [{ required: true, message: '', type: 'error' }],
         withdrawalInterest: [{ required: true, message: '', type: 'error' }],
         reviewOrgTel: [{ required: true, message: '', type: 'error' }],
         jbr: [{ required: true, message: '', type: 'error' }],
         jbrxm: [{ required: true, message: '', type: 'error' }],
-        jbrzjhm: [{ required: true, message: '', type: 'error' }]
+        jbrzjhm: [{ required: true, message: '', type: 'error' }],
+        promiseDate: [{ required: true, message: '', type: 'error' }]
+      },
+      pickDate: '',
+      dayjs
+    }
+  },
+  computed: {
+    timePickerProps() {
+      return {
+        disableTime: () => {
+          if (this.pickDate === dayjs().format('YYYY-MM-DD')) {
+            return {
+              hour: [0, 1, 2, 3, 4, 5, 6]
+            }
+          }
+          return {}
+        }
       }
     }
   },
@@ -375,10 +564,12 @@ export default {
     // 切换处理结果
     handleResultChange(value) {
       this.feedbackInfo.cljg = value
+      this.files = []
       // 重置表单
       this.$refs.feedbackForm.reset()
       // 重置失败原因
       this.feedbackInfo.sjyy = null
+      this.feedbackInfo.reviewOrgTel = '0871-12329'
     },
     // 显示弹窗
     showFeedbackDialog(row) {
@@ -386,6 +577,7 @@ export default {
       // 赋值
       this.parentParams = row
       // 清空数据
+      this.files = []
       this.baseInfoData = {
         // 申报对象证件号码
         applicantIdnumber: null,
@@ -448,13 +640,15 @@ export default {
         // 提取利息
         withdrawalInterest: null,
         // 咨询电话
-        reviewOrgTel: null,
+        reviewOrgTel: '0871-12329',
         // 经办人账号
         jbr: null,
         // 经办人姓名
         jbrxm: null,
         // 经办人证件号码
-        jbrzjhm: null
+        jbrzjhm: null,
+        // 承诺办结时间
+        promiseDate: null
       }
       this.fileList = []
       this.handleGetInfo(row)
@@ -474,6 +668,7 @@ export default {
             this.fileList = res.data.zwbjzdxtbjFileList
             // 反馈数据
             this.feedbackInfo = {}
+            this.feedbackInfo.reviewOrgTel = '0871-12329'
           } else {
             this.$message.error('获取失败，请稍后重试')
           }
@@ -557,6 +752,7 @@ export default {
     handleSubmitFeedback({ validateResult }) {
       if (validateResult === true) {
         this.btnLoading = true
+        this.feedbackInfo.sjyy = '同意'
         this.handleSubmit()
       } else {
         this.$message.error('请检查必填项')
@@ -576,7 +772,23 @@ export default {
       }
     },
     // 提交
-    handleSubmit() {
+    async handleSubmit() {
+      // 上传文件校验
+      let isFiles
+      if (this.files.length === 0) {
+        // this.$message.error('请上传反馈文件')
+        isFiles = {}
+      } else {
+        isFiles = {
+          zxbh: this.parentParams.zxbh,
+          id: this.parentParams.id,
+          wjlx: '1',
+          wjmc: this.files[0].name,
+          wjsj: await this.uploadImgToBase64(this.files[0].raw),
+          cjsj: null
+        }
+      }
+      // console.log(isFiles, this.uploadImgToBase64(this.files[0].raw), 'isFiles有文件上传吗')
       // 处理反馈信息
       var feedbackData = {
         sqData: {
@@ -585,6 +797,7 @@ export default {
           jbr: this.parentParams.jbr,
           jbrxm: this.parentParams.jbrxm,
           jbrzjhm: this.parentParams.jbrzjhm,
+          promiseDate: this.feedbackInfo.promiseDate,
           busiid: this.feedbackInfo.busiid,
           fkrq: null,
           fksj: null,
@@ -596,7 +809,7 @@ export default {
           fksj: JSON.stringify(this.feedbackInfo)
         },
         // 反馈文件置空
-        fbFile: {}
+        fbFile: isFiles
         // fbFile: {
         //   zxbh: this.parentParams.zxbhnull,
         //   id: this.parentParams.id,
@@ -617,6 +830,44 @@ export default {
         } else {
           this.$message.error('反馈提交失败，请稍后重试')
         }
+      })
+    },
+    shortenFilename(filename, maxLength) {
+      // 检查文件名是否超长
+      if (filename.length <= maxLength) {
+        return filename
+      }
+      // 找到文件扩展名的位置
+      const extIndex = filename.lastIndexOf('.')
+      const extension = extIndex !== -1 ? filename.slice(extIndex) : ''
+      const nameWithoutExt = extIndex !== -1 ? filename.slice(0, extIndex) : filename
+
+      // 计算保留前后部分的长度
+      const charsToShow = maxLength - extension.length - 3 // 3 是表示省略号 "..."
+      const frontChars = Math.ceil(charsToShow * 0.55) // 前部分保留 75%
+      const backChars = Math.floor(charsToShow * 0.25) // 后部分保留 25%
+
+      // 生成省略后的文件名
+      return `${nameWithoutExt.slice(0, frontChars)}...${nameWithoutExt.slice(-backChars)}${extension}`
+    },
+    formatFileSize(size) {
+      const units = ['B', 'KB', 'MB', 'GB', 'TB']
+      let i = 0
+      while (size >= 1024 && i < units.length - 1) {
+        size /= 1024
+        i++
+      }
+      return size.toFixed(2) + ' ' + units[i]
+    },
+    uploadImgToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+          // 图片转base64完成后返回reader对象
+          resolve(reader.result)
+        }
+        reader.onerror = reject
       })
     }
   }
@@ -656,12 +907,16 @@ export default {
   .t-descriptions__body--border .t-descriptions__label:hover {
     background-color: #b5c7ff;
   }
-  .feedback-form {
-    .t-descriptions__label::before {
-      content: '*';
-      color: red;
-      margin-right: 2px;
-    }
-  }
+  // .feedback-form {
+  //   .t-descriptions__label::before {
+  //     content: '*';
+  //     color: red;
+  //     margin-right: 2px;
+  //   }
+  //   .t-descriptions__label:nth-last-child(1)::before {
+  //     content: ''; /* 移除内容 */
+  //     // display: none; /* 或者直接不显示 */
+  //   }
+  // }
 }
 </style>

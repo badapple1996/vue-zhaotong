@@ -117,7 +117,10 @@
           <t-descriptions-item label="经办人证件号码">
             <t-input v-model="feedbackInfo.jbrzjhm" borderless readonly />
           </t-descriptions-item>
-          <t-descriptions-item label="咨询电话" :span="3">
+          <t-descriptions-item label="承诺办结时间">
+            <t-input v-model="feedbackInfo.promiseDate" borderless readonly />
+          </t-descriptions-item>
+          <t-descriptions-item label="咨询电话" :span="2">
             <t-input v-model="feedbackInfo.reviewOrgTel" borderless readonly />
           </t-descriptions-item>
         </t-descriptions>
@@ -271,7 +274,9 @@ export default {
         // 经办人姓名
         jbrxm: null,
         // 经办人证件号码
-        jbrzjhm: null
+        jbrzjhm: null,
+        // 承诺办结时间
+        promiseDate: null
       },
       // 附件列表
       fileList: [],
@@ -358,7 +363,9 @@ export default {
         // 经办人姓名
         jbrxm: null,
         // 经办人证件号码
-        jbrzjhm: null
+        jbrzjhm: null,
+        // 承诺办结时间
+        promiseDate: null
       }
       this.fileList = []
       this.handleGetInfo(row)

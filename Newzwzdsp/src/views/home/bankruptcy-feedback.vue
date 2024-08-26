@@ -13,14 +13,14 @@
       <!-- 基本信息 -->
       <t-card title="基本信息" class="info-block" :bordered="false">
         <t-descriptions :column="3" bordered colon size="small">
-          <t-descriptions-item label="申报对象证件号码">
-            <t-input v-model="baseInfoData.applicantIdnumber" borderless readonly />
+          <t-descriptions-item label="企业名称">
+            <t-input v-model="baseInfoData.qymc" borderless readonly />
           </t-descriptions-item>
-          <t-descriptions-item label="申报对象名称">
-            <t-input v-model="baseInfoData.applicantName" borderless readonly />
+          <t-descriptions-item label="统一社会信用代码">
+            <t-input v-model="baseInfoData.tyshxydm" borderless readonly />
           </t-descriptions-item>
-          <t-descriptions-item label="联系电话">
-            <t-input v-model="baseInfoData.mobile" borderless readonly />
+          <t-descriptions-item label="经办人身份证号">
+            <t-input v-model="baseInfoData.jbr_sfzh" borderless readonly />
           </t-descriptions-item>
         </t-descriptions>
       </t-card>
@@ -160,9 +160,9 @@ export default {
       openFeedback: false,
       // 申报信息
       baseInfoData: {
-        applicantIdnumber: null, // 申报对象证件号码
-        applicantName: null, // 申报对象名称
-        mobile: null // 联系电话
+        qymc: null, // 企业名称
+        tyshxydm: null, // 统一社会信用代码
+        jbr_sfzh: null // 经办人身份证号
       },
       // 反馈信息
       feedbackInfo: {},
@@ -294,6 +294,7 @@ export default {
       }
       // 按钮loading
       // 处理反馈信息
+
       var feedbackData = {
         sqData: {
           zxbh: this.parentParams.zxbh,

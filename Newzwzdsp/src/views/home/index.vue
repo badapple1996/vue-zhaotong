@@ -2,7 +2,7 @@
   <div class="app-container">
     <t-loading :loading="loading" text="加载中..." fullscreen />
     <div class="app-header">
-      <img src="../../assets/images/logo.svg" width="136" />
+      <!-- <img src="../../assets/images/logo.svg" width="136" /> -->
       <div>
         <section class="wrapper">
           <div class="top">政务数据直达</div>
@@ -77,6 +77,12 @@
           @filter-change="onFilterChange"
           @change="onChange"
         >
+          <!-- <template #serial-number="{ row }">
+            <p class="serial-number"> -->
+          <!-- 计算并显示序号 -->
+          <!-- {{ (queryParams.pageNum - 1) * queryParams.pageSize + index + 1 + globalIndexOffset }}
+            </p>
+          </template> -->
           <template #applytype="{ row }">
             <t-tag v-if="row.applytype === APPLY_TYPE.JOB.value" theme="success" variant="light">{{
               APPLY_TYPE.JOB.label
@@ -110,16 +116,12 @@
           </template>
           <template #op="{ row }">
             <t-space>
-              <t-button
-                v-if="row.status === PROCESS_STATUS.RECEIVE_SUCCESS.value"
-                size="small"
-                theme="warning"
-                @click="handleFeedback(row)"
-                variant="outline"
-              >
+              <!-- v-if="row.status === PROCESS_STATUS.RECEIVE_SUCCESS.value" -->
+              <t-button size="small" theme="warning" @click="handleFeedback(row)" variant="outline">
                 <discount-icon slot="icon" />反馈</t-button
               >
-              <t-button size="small" theme="primary" @click="handleBrowse(row)" variant="outline" v-else>
+              <!-- v-else -->
+              <t-button size="small" theme="primary" @click="handleBrowse(row)" variant="outline">
                 <adjustment-icon slot="icon" />浏览</t-button
               >
             </t-space>
@@ -180,6 +182,7 @@ export default {
 
   data() {
     return {
+      // globalIndexOffset: 0,
       // 根据ID查询详情
       resData: {},
       loading: false,
@@ -331,10 +334,26 @@ export default {
         }
       ],
       // 时间段
-      dataRange: []
+      dataRange: [this.formatDate(), this.formatDate1()]
+      // dataRange: []
     }
   },
+
   computed: {
+    // 计算开始时间
+    defaultStartTime() {
+      const now = new Date()
+      now.setMonth(now.getMonth() - 1) // 设置为一个月前
+      console.log(now, 'now-----')
+
+      return this.formatDate(now)
+    },
+    // 计算结束时间（当前日期）
+    defaultEndTime() {
+      const now = new Date()
+      console.log(now, 'now=====')
+      return this.formatDate(now)
+    },
     presets() {
       return {
         最近7天: [new Date(+new Date() - 86400000 * 6), new Date()],
@@ -375,6 +394,24 @@ export default {
     this.handleGetList()
   },
   methods: {
+    // 格式化日期
+    formatDate() {
+      const date = new Date()
+      date.setMonth(date.getMonth() - 1) // 设置为一个月前
+      const year = date.getFullYear().toString().padStart(4, '0')
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
+      const day = date.getDate().toString().padStart(2, '0')
+      console.log(year, month, day, 'date111111==================')
+      return `${year}-${month}-${day}`
+    },
+    formatDate1() {
+      const date = new Date()
+      const year = date.getFullYear().toString().padStart(4, '0')
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
+      const day = date.getDate().toString().padStart(2, '0')
+      console.log(year, month, day, 'date2222==================')
+      return `${year}-${month}-${day}`
+    },
     // 分页查询
     handlePageChange(page) {
       this.queryParams.pageSize = page.pageSize
@@ -421,6 +458,7 @@ export default {
       listQuery(this.queryParams).then(res => {
         this.loading = false
         if (res.code === 200) {
+          console.log(res)
           this.dataList = res.rows
           this.total = res.total
         } else {
@@ -475,6 +513,8 @@ export default {
         this.loading = false
         if (res.code === 200) {
           this.dataList = res.rows
+          console.log(this.dataList, 'this.dataList=====')
+
           this.total = res.total
         } else {
           this.$message.error('获取失败，请稍后重试')
@@ -544,13 +584,13 @@ export default {
 .top {
   clip-path: polygon(0% 0%, 100% 0%, 100% 48%, 0% 58%);
 }
-.bottom {
-  clip-path: polygon(0% 60%, 100% 50%, 100% 100%, 0% 100%);
-  color: transparent;
-  background: -webkit-linear-gradient(177deg, black 53%, hsl(0, 0%, 100%) 65%);
-  background: linear-gradient(177deg, black 53%, hsl(0, 0%, 100%) 65%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  transform: translateX(-0.02em);
-}
+// .bottom {
+//   clip-path: polygon(0% 60%, 100% 50%, 100% 100%, 0% 100%);
+//   color: transparent;
+//   background: -webkit-linear-gradient(177deg, black 53%, hsl(0, 0%, 100%) 65%);
+//   background: linear-gradient(177deg, black 53%, hsl(0, 0%, 100%) 65%);
+//   background-clip: text;
+//   -webkit-background-clip: text;
+//   transform: translateX(-0.02em);
+// }
 </style>

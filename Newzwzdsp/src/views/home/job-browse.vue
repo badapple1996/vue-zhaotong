@@ -143,7 +143,7 @@
           <t-descriptions-item label="业务序号">
             <t-input v-model="feedbackInfo.busiid" borderless readonly placeholder="-" />
           </t-descriptions-item>
-          <t-descriptions-item label="单位账号">
+          <!-- <t-descriptions-item label="单位账号">
             <t-input v-model="feedbackInfo.unitaccnum" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="办理日期">
@@ -174,15 +174,18 @@
           </t-descriptions-item>
           <t-descriptions-item label="银行账号">
             <t-input v-model="feedbackInfo.bankAccount" borderless readonly placeholder="-" />
-          </t-descriptions-item>
+          </t-descriptions-item> -->
           <t-descriptions-item label="经办人账号">
-            <t-input v-model="feedbackInfo.agentAccount" borderless readonly placeholder="-" />
+            <t-input v-model="feedbackInfo.jbr" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="经办人姓名">
-            <t-input v-model="feedbackInfo.agentName" borderless readonly placeholder="-" />
+            <t-input v-model="feedbackInfo.jbrxm" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="经办人证件号码">
-            <t-input v-model="feedbackInfo.agentIdNumber" borderless readonly placeholder="-" />
+            <t-input v-model="feedbackInfo.jbrzjhm" borderless readonly placeholder="-" />
+          </t-descriptions-item>
+          <t-descriptions-item label="承诺办结时间">
+            <t-input v-model="feedbackInfo.promiseDate" borderless readonly placeholder="-" />
           </t-descriptions-item>
         </t-descriptions>
         <t-descriptions v-else-if="feedbackInfo.cljg == '4'" bordered colon size="small">
@@ -271,19 +274,20 @@ export default {
         cljg: null, // 处理结果
         sjyy: null, // 失败原因
         busiid: null, // 业务序号
-        unitaccnum: null, // 单位账号
-        TranDate: null, // 办理日期
-        accnum: null, // 个人账号
-        relphone: null, // 手机号码
-        accname: null, // 扣款账户名称
-        paymentDueDate: null, // 每月约定扣款日
-        monthlyAmount: null, // 月缴存额
-        bankName: null, // 所属银行
-        accnumname: null, // 账户名称
-        bankAccount: null, // 银行账号
+        // unitaccnum: null, // 单位账号
+        // TranDate: null, // 办理日期
+        // accnum: null, // 个人账号
+        // relphone: null, // 手机号码
+        // accname: null, // 扣款账户名称
+        // paymentDueDate: null, // 每月约定扣款日
+        // monthlyAmount: null, // 月缴存额
+        // bankName: null, // 所属银行
+        // accnumname: null, // 账户名称
+        // bankAccount: null, // 银行账号
         jbr: null, // 经办人账号
         jbrxm: null, // 经办人姓名
-        jbrzjhm: null // 经办人证件号码
+        jbrzjhm: null, // 经办人证件号码
+        promiseDate: null // 承诺办结时间
       },
       // 附件列表
       fileList: [],
@@ -307,19 +311,20 @@ export default {
         cljg: null, // 处理结果
         sjyy: null, // 失败原因
         busiid: null, // 业务序号
-        unitaccnum: null, // 单位账号
-        TranDate: null, // 办理日期
-        accnum: null, // 个人账号
-        relphone: null, // 手机号码
-        accname: null, // 扣款账户名称
-        paymentDueDate: null, // 每月约定扣款日
-        monthlyAmount: null, // 月缴存额
-        bankName: null, // 所属银行
-        accnumname: null, // 账户名称
-        bankAccount: null, // 银行账号
+        // unitaccnum: null, // 单位账号
+        // TranDate: null, // 办理日期
+        // accnum: null, // 个人账号
+        // relphone: null, // 手机号码
+        // accname: null, // 扣款账户名称
+        // paymentDueDate: null, // 每月约定扣款日
+        // monthlyAmount: null, // 月缴存额
+        // bankName: null, // 所属银行
+        // accnumname: null, // 账户名称
+        // bankAccount: null, // 银行账号
         jbr: null, // 经办人账号
         jbrxm: null, // 经办人姓名
-        jbrzjhm: null // 经办人证件号码
+        jbrzjhm: null, // 经办人证件号码
+        promiseDate: null // 承诺办结时间
       }
       this.fileList = []
       this.handleGetInfo(row)
