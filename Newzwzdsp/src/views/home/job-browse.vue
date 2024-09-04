@@ -184,8 +184,47 @@
           <t-descriptions-item label="经办人证件号码">
             <t-input v-model="feedbackInfo.jbrzjhm" borderless readonly placeholder="-" />
           </t-descriptions-item>
+          <t-descriptions-item label="承诺办结工作日">
+            <t-input v-model="feedbackInfo.promiseDay" borderless readonly placeholder="-" />
+          </t-descriptions-item>
           <t-descriptions-item label="承诺办结时间">
             <t-input v-model="feedbackInfo.promiseDate" borderless readonly placeholder="-" />
+          </t-descriptions-item>
+          <t-descriptions-item v-if="disUpload" :span="3">
+            <template v-slot:label>
+              <span style="color: red; margin-right: 2px">*</span> <span>上传文件</span>
+            </template>
+            <t-upload
+              :autoUpload="false"
+              v-model="files"
+              theme="custom"
+              :max="1"
+              :abridgeName="[10, 8]"
+              draggable
+              :sizeLimit="{ size: 2, unit: 'MB', message: '图片太大，不能超过 {sizeLimit} MB' }"
+              action=""
+              accept="image/*, .pdf"
+            >
+              <template>
+                <div v-if="files && files.length" style="width: 100%; height: 100%">
+                  <div>
+                    <div style="margin-bottom: 10px">
+                      <span>{{ shortenFilename(files[0].name, 20) }}</span>
+                    </div>
+                    <span>文件大小:{{ formatFileSize(files[0].size) }}</span
+                    ><br />
+                    <span>上传日期:{{ date }}</span>
+                  </div>
+                  <div style="margin-top: 10px">
+                    <t-link theme="primary">重新上传</t-link>
+                  </div>
+                </div>
+                <div v-else>
+                  <t-link theme="primary">点击上传</t-link><span>&nbsp;/&nbsp;拖拽到此区域</span> <br />
+                  <p>要求文件大小在 2M 以内</p>
+                </div>
+              </template>
+            </t-upload>
           </t-descriptions-item>
         </t-descriptions>
         <t-descriptions v-else-if="feedbackInfo.cljg == '4'" bordered colon size="small">
@@ -194,13 +233,72 @@
               <t-tag theme="danger" size="small">失败</t-tag>
             </t-space>
           </t-descriptions-item>
+          <t-descriptions-item label="业务序号">
+            <t-input v-model="feedbackInfo.busiid" borderless readonly placeholder="-" />
+          </t-descriptions-item>
+          <t-descriptions-item label="经办人账号">
+            <t-input v-model="feedbackInfo.jbr" borderless readonly placeholder="-" />
+          </t-descriptions-item>
+          <t-descriptions-item label="经办人姓名">
+            <t-input v-model="feedbackInfo.jbrxm" borderless readonly placeholder="-" />
+          </t-descriptions-item>
+          <t-descriptions-item label="经办人证件号码">
+            <t-input v-model="feedbackInfo.jbrzjhm" borderless readonly placeholder="-" />
+          </t-descriptions-item>
+          <t-descriptions-item label="承诺办结工作日">
+            <t-input v-model="feedbackInfo.promiseDay" borderless readonly placeholder="-" />
+          </t-descriptions-item>
+          <t-descriptions-item label="承诺办结时间">
+            <t-input v-model="feedbackInfo.promiseDate" borderless readonly placeholder="-" />
+          </t-descriptions-item>
           <t-descriptions-item label="失败原因" :span="3">
             <t-input v-model="feedbackInfo.sjyy" borderless readonly placeholder="-" />
           </t-descriptions-item>
+          <t-descriptions-item v-if="disUpload" :span="3">
+            <template v-slot:label>
+              <span style="color: red; margin-right: 2px">*</span> <span>上传文件</span>
+            </template>
+            <t-upload
+              :autoUpload="false"
+              v-model="files"
+              theme="custom"
+              :max="1"
+              :abridgeName="[10, 8]"
+              draggable
+              :sizeLimit="{ size: 2, unit: 'MB', message: '图片太大，不能超过 {sizeLimit} MB' }"
+              action=""
+              accept="image/*, .pdf"
+            >
+              <template>
+                <div v-if="files && files.length" style="width: 100%; height: 100%">
+                  <div>
+                    <div style="margin-bottom: 10px">
+                      <span>{{ shortenFilename(files[0].name, 20) }}</span>
+                    </div>
+                    <span>文件大小:{{ formatFileSize(files[0].size) }}</span
+                    ><br />
+                    <span>上传日期:{{ date }}</span>
+                  </div>
+                  <div style="margin-top: 10px">
+                    <t-link theme="primary">重新上传</t-link>
+                  </div>
+                </div>
+                <div v-else>
+                  <t-link theme="primary">点击上传</t-link><span>&nbsp;/&nbsp;拖拽到此区域</span> <br />
+                  <p>要求文件大小在 2M 以内</p>
+                </div>
+              </template>
+            </t-upload>
+          </t-descriptions-item>
         </t-descriptions>
-        <div v-else style="text-align: center">
-          <span>暂无反馈信息!</span>
+        <div v-show="disUpload" style="width: 100%; margin-top: 20px; display: flex; justify-content: center">
+          <t-space>
+            <t-button :loading="btnLoading" @click="handleSubmit"><GestureUpIcon slot="icon" />文件补传</t-button>
+          </t-space>
         </div>
+        <!-- <div v-else style="text-align: center">
+          <span>暂无反馈信息!</span>
+        </div> -->
       </t-card>
       <!-- 附件列表信息 -->
       <t-card title="附件列表信息" class="container-base-margin-top" :bordered="false">
@@ -235,7 +333,7 @@
 </template>
 
 <script>
-import { getInfoById } from '../../api/commonApi'
+import { getInfoById, fileBc } from '../../api/commonApi'
 import {
   GENDER,
   DOCUMENT_TYPE,
@@ -249,10 +347,10 @@ import {
   PERSONNEL_CATEGORY,
   AREA_CODE
 } from '../../utils/constants.js'
-import { CloudDownloadIcon } from 'tdesign-icons-vue'
+import { CloudDownloadIcon, GestureUpIcon } from 'tdesign-icons-vue'
 
 export default {
-  components: { CloudDownloadIcon },
+  components: { CloudDownloadIcon, GestureUpIcon },
   data() {
     return {
       GENDER,
@@ -270,6 +368,12 @@ export default {
       // 申报信息
       baseInfoData: {},
       // 反馈信息
+      disUpload: false, //文件补传显示/隐藏
+      date: new Date().toLocaleString(), //上传文件日期
+      files: [], //上传文件
+      btnLoading: false, //按钮转圈
+      // 父组件传递的参数
+      parentParams: {},
       feedbackInfo: {
         cljg: null, // 处理结果
         sjyy: null, // 失败原因
@@ -287,7 +391,8 @@ export default {
         jbr: null, // 经办人账号
         jbrxm: null, // 经办人姓名
         jbrzjhm: null, // 经办人证件号码
-        promiseDate: null // 承诺办结时间
+        promiseDate: null, // 承诺办结时间
+        promiseDay: null // 承诺办结工作日
       },
       // 附件列表
       fileList: [],
@@ -302,10 +407,98 @@ export default {
   },
   mounted() {},
   methods: {
+    async handleSubmit() {
+      // 上传文件校验
+      let isFiles
+      let base64Data
+      let base64Data1
+      if (this.files.length === 0) {
+        this.$message.error('请上传反馈文件')
+        // isFiles = {}
+        return
+      } else {
+        base64Data = await this.uploadImgToBase64(this.files[0].raw)
+        base64Data1 = base64Data.split(',', 2)[1]
+        isFiles = {
+          zxbh: this.parentParams.zxbh,
+          id: this.parentParams.id,
+          wjlx: '1',
+          wjmc: this.files[0].name,
+          wjsj: base64Data1,
+          cjsj: null
+        }
+      }
+      console.log(isFiles, '文件补传的参数')
+
+      fileBc(isFiles)
+        .then(res => {
+          if (res.code === 200) {
+            setTimeout(() => {
+              this.$message.success('文件补传成功')
+              this.btnLoading = false
+              this.openBrowse = false
+              this.$emit('refresh')
+            }, 2000)
+          } else {
+            this.$message.error(res)
+          }
+        })
+        .catch(error => {
+          this.btnLoading = false
+          // 检查响应状态码
+          if (error.message) {
+            // 显示错误信息的逻辑
+            this.$message.error(error.message)
+          } else {
+            // showErrorMessage('An error occurred')
+          }
+        })
+    },
+    uploadImgToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+          // 图片转base64完成后返回reader对象
+          resolve(reader.result)
+        }
+        reader.onerror = reject
+      })
+    },
+    shortenFilename(filename, maxLength) {
+      // 检查文件名是否超长
+      if (filename.length <= maxLength) {
+        return filename
+      }
+      // 找到文件扩展名的位置
+      const extIndex = filename.lastIndexOf('.')
+      const extension = extIndex !== -1 ? filename.slice(extIndex) : ''
+      const nameWithoutExt = extIndex !== -1 ? filename.slice(0, extIndex) : filename
+
+      // 计算保留前后部分的长度
+      const charsToShow = maxLength - extension.length - 3 // 3 是表示省略号 "..."
+      const frontChars = Math.ceil(charsToShow * 0.55) // 前部分保留 75%
+      const backChars = Math.floor(charsToShow * 0.25) // 后部分保留 25%
+
+      // 生成省略后的文件名
+      return `${nameWithoutExt.slice(0, frontChars)}...${nameWithoutExt.slice(-backChars)}${extension}`
+    },
+    formatFileSize(size) {
+      const units = ['B', 'KB', 'MB', 'GB', 'TB']
+      let i = 0
+      while (size >= 1024 && i < units.length - 1) {
+        size /= 1024
+        i++
+      }
+      return size.toFixed(2) + ' ' + units[i]
+    },
     // 显示弹窗
     showBrowseDialog(row) {
       this.openBrowse = true
+      this.disUpload = false
       // 清空数据
+      // 赋值
+      this.parentParams = row
       this.baseInfoData = {}
       this.feedbackInfo = {
         cljg: null, // 处理结果
@@ -324,30 +517,49 @@ export default {
         jbr: null, // 经办人账号
         jbrxm: null, // 经办人姓名
         jbrzjhm: null, // 经办人证件号码
-        promiseDate: null // 承诺办结时间
+        promiseDate: null, // 承诺办结时间
+        promiseDay: null // 承诺办结工作日
       }
       this.fileList = []
-      this.handleGetInfo(row)
+      ;(this.files = []), //上传文件
+        this.handleGetInfo(row)
     },
     // 加载数据
     handleGetInfo(row) {
       this.loading = true
       this.$nextTick(() => {
-        getInfoById({ zxbh: row.zxbh, id: row.id }).then(res => {
-          this.loading = false
-          if (res.code === 200) {
-            console.log(JSON.parse(JSON.stringify(res.data)))
-            // 基本信息
-            let dataInfo = res.data.zwbjzdxtbjData
-            this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
-            // 文件数据
-            this.fileList = res.data.zwbjzdxtbjFileList
-            // 反馈信息
-            this.feedbackInfo = dataInfo.fksj ? JSON.parse(dataInfo.fksj) : this.feedbackInfo
-          } else {
-            this.$message.error('获取失败，请稍后重试')
-          }
-        })
+        getInfoById({ zxbh: row.zxbh, id: row.id })
+          .then(res => {
+            this.loading = false
+            if (res.code === 200) {
+              console.log(JSON.parse(JSON.stringify(res.data)))
+              // 基本信息
+              let dataInfo = res.data.zwbjzdxtbjData
+              this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
+              // 文件数据
+              this.fileList = res.data.zwbjzdxtbjFileList
+              // 反馈信息
+              this.feedbackInfo = dataInfo.fksj ? JSON.parse(dataInfo.fksj) : this.feedbackInfo
+              if (row.status == '3' || row.status == '4') {
+                this.disUpload = true
+                console.log(this.disUpload, 'this.disUpload+++++++++')
+              } else {
+                this.disUpload = false
+              }
+            } else {
+              this.$message.error(res)
+            }
+          })
+          .catch(error => {
+            this.btnLoading = false
+            // 检查响应状态码
+            if (error.message) {
+              // 显示错误信息的逻辑
+              this.$message.error(error.message)
+            } else {
+              // showErrorMessage('An error occurred')
+            }
+          })
       })
     },
     // 格式化基础数据
@@ -399,9 +611,15 @@ export default {
     translateDict(dict, value) {
       return dict.filter(d => d.value == value)[0]?.label || value
     },
-    downloadBase64File(base64Data, fileName) {
+    downloadBase64File(base64Data, fileName, fileType) {
+      let binaryString
+      if (fileType == '1') {
+        binaryString = atob(atob(base64Data))
+      } else {
+        binaryString = atob(base64Data)
+      }
       // 将 Base64 字符串转换为二进制数据
-      const binaryString = atob(base64Data)
+      // const binaryString = atob(atob(base64Data))
       const len = binaryString.length
       const bytes = new Uint8Array(len)
 
@@ -422,7 +640,7 @@ export default {
     },
     // 下载附件
     handleDownload(row) {
-      this.downloadBase64File(row.wjsj, row.wjmc)
+      this.downloadBase64File(row.wjsj, row.wjmc, row.wjlx)
     }
   }
 }

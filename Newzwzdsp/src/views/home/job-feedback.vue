@@ -198,7 +198,7 @@
                 </t-form-item>
               </t-descriptions-item>
               <t-descriptions-item label="月缴存额">
-                <t-form-item label="" name="paymentDueDate">
+                <t-form-item label="" name="monthlyAmount">
                   <t-input v-model="feedbackInfo.monthlyAmount" placeholder="请输入月缴存额"></t-input>
                 </t-form-item>
               </t-descriptions-item>
@@ -249,6 +249,14 @@
               </t-descriptions-item>
               <t-descriptions-item>
                 <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>承诺办结工作日</span>
+                </template>
+                <t-form-item label="" name="promiseDay">
+                  <t-input v-model="feedbackInfo.promiseDay" placeholder="请输入承诺办结工作日"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item :span="1">
+                <template v-slot:label>
                   <span style="color: red; margin-right: 2px">*</span> <span>承诺办结时间</span>
                 </template>
                 <t-form-item label="" name="promiseDate">
@@ -259,13 +267,17 @@
                     v-model="feedbackInfo.promiseDate"
                     placeholder="请选择承诺办结时间"
                     clearable
-                    :disable-date="{ before: dayjs().subtract(1, 'day').format() }"
+                    :disable-date="{
+                      before: dayjs()
+                        .subtract(diffDays + 1, 'day')
+                        .format()
+                    }"
                     :time-picker-props="timePickerProps"
                     @pick="date => (pickDate = dayjs(date).format('YYYY-MM-DD'))"
                   />
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="上传文件" class="feedback-form-upload">
+              <t-descriptions-item label="上传文件" class="feedback-form-upload" :span="3">
                 <t-upload
                   :autoUpload="false"
                   v-model="files"
@@ -352,6 +364,14 @@
               </t-descriptions-item>
               <t-descriptions-item>
                 <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>承诺办结工作日</span>
+                </template>
+                <t-form-item label="" name="promiseDay">
+                  <t-input v-model="feedbackInfo.promiseDay" placeholder="请输入承诺办结工作日"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
                   <span style="color: red; margin-right: 2px">*</span> <span>承诺办结时间</span>
                 </template>
                 <t-form-item label="" name="promiseDate">
@@ -362,7 +382,11 @@
                     v-model="feedbackInfo.promiseDate"
                     placeholder="请选择承诺办结时间"
                     clearable
-                    :disable-date="{ before: dayjs().subtract(1, 'day').format() }"
+                    :disable-date="{
+                      before: dayjs()
+                        .subtract(diffDays + 1, 'day')
+                        .format()
+                    }"
                     :time-picker-props="timePickerProps"
                     @pick="date => (pickDate = dayjs(date).format('YYYY-MM-DD'))"
                   />
@@ -471,9 +495,12 @@ export default {
   components: { CloudDownloadIcon, GestureUpIcon },
   data() {
     return {
+      disSqrq: '', //承诺办结时间
+      diffDays: '', //天数
       date: new Date().toLocaleString(),
       files: [],
       btnLoading: false,
+      btnLoading111: true,
       GENDER,
       DOCUMENT_TYPE,
       NATION,
@@ -506,7 +533,8 @@ export default {
         jbr: null, // 经办人账号
         jbrxm: null, // 经办人姓名
         jbrzjhm: null, // 经办人证件号码
-        promiseDate: null // 承诺办结时间
+        promiseDate: null, // 承诺办结时间
+        promiseDay: '3' // 承诺办结工作日
       },
       // 附件列表
       fileList: [],
@@ -533,7 +561,8 @@ export default {
         jbr: [{ required: true, message: '', type: 'error' }],
         jbrxm: [{ required: true, message: '', type: 'error' }],
         jbrzjhm: [{ required: true, message: '', type: 'error' }],
-        promiseDate: [{ required: true, message: '', type: 'error' }]
+        promiseDate: [{ required: true, message: '', type: 'error' }],
+        promiseDay: [{ required: true, message: '', type: 'error' }]
       },
       // 父组件传递的参数
       parentParams: {},
@@ -557,12 +586,35 @@ export default {
   },
   mounted() {},
   methods: {
+    // 计算并返回两个日期之间的天数差（字符串格式）
+    getDaysDifference(dateStr) {
+      // dateStr为申请日期
+      // 将目标日期字符串转换为Date对象
+      const targetDate = new Date(dateStr)
+      // 获取当前日期
+      const now = new Date()
+
+      // 为了计算天数差，我们只关心年和月日部分，因此将时间部分设置为00:00:00
+      targetDate.setHours(0, 0, 0, 0)
+      now.setHours(0, 0, 0, 0)
+
+      // 计算时间差（毫秒）
+      const diff = now - targetDate
+
+      // 将毫秒转换为天数
+      this.diffDays = Math.ceil(diff / (1000 * 3600 * 24))
+      console.log(this.diffDays, 'this.diffDays++++++++')
+
+      // 根据天数差返回相应的字符串
+      // return `${diffDays}天`;
+    },
     // 切换处理结果
     handleResultChange(value) {
       this.feedbackInfo.cljg = value
       this.files = []
       // 重置表单
       this.$refs.feedbackForm.reset()
+      this.feedbackInfo.promiseDay = '3'
       // 重置失败原因
       this.feedbackInfo.sjyy = null
     },
@@ -592,7 +644,8 @@ export default {
         jbr: null, // 经办人账号
         jbrxm: null, // 经办人姓名
         jbrzjhm: null, // 经办人证件号码
-        promiseDate: null // 承诺办结时间
+        promiseDate: null, // 承诺办结时间
+        promiseDay: '3' // 承诺办结工作日
       }
       this.fileList = []
       this.handleGetInfo(row)
@@ -601,21 +654,35 @@ export default {
     handleGetInfo(row) {
       this.loading = true
       this.$nextTick(() => {
-        getInfoById({ zxbh: row.zxbh, id: row.id }).then(res => {
-          this.loading = false
-          if (res.code === 200) {
-            console.log(JSON.parse(JSON.stringify(res.data)))
-            // data数据
-            let dataInfo = res.data.zwbjzdxtbjData
-            this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
-            // 文件数据
-            this.fileList = res.data.zwbjzdxtbjFileList
-            // 反馈数据
-            this.feedbackInfo = {}
-          } else {
-            this.$message.error('获取失败，请稍后重试')
-          }
-        })
+        getInfoById({ zxbh: row.zxbh, id: row.id })
+          .then(res => {
+            this.loading = false
+            if (res.code === 200) {
+              console.log(JSON.parse(JSON.stringify(res.data)))
+              // data数据
+              let dataInfo = res.data.zwbjzdxtbjData
+              this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
+              // 文件数据
+              this.fileList = res.data.zwbjzdxtbjFileList
+              this.disSqrq = res.data.zwbjzdxtbjSq.sqrq
+              this.getDaysDifference(this.disSqrq)
+
+              // 反馈数据
+              // this.feedbackInfo = {}
+            } else {
+              this.$message.error(res)
+            }
+          })
+          .catch(error => {
+            this.btnLoading = false
+            // 检查响应状态码
+            if (error.message) {
+              // 显示错误信息的逻辑
+              this.$message.error(error.message)
+            } else {
+              // showErrorMessage('An error occurred')
+            }
+          })
       })
     },
     // 格式化基础数据
@@ -663,9 +730,15 @@ export default {
     translateDict(dict, value) {
       return dict.filter(d => d.value == value)[0]?.label || value
     },
-    downloadBase64File(base64Data, fileName) {
+    downloadBase64File(base64Data, fileName, fileType) {
+      let binaryString
+      if (fileType == '1') {
+        binaryString = atob(atob(base64Data))
+      } else {
+        binaryString = atob(base64Data)
+      }
       // 将 Base64 字符串转换为二进制数据
-      const binaryString = atob(base64Data)
+      // const binaryString = atob(atob(base64Data))
       const len = binaryString.length
       const bytes = new Uint8Array(len)
       for (let i = 0; i < len; i++) {
@@ -685,7 +758,7 @@ export default {
     },
     // 下载附件
     handleDownload(row) {
-      this.downloadBase64File(row.wjsj, row.wjmc)
+      this.downloadBase64File(row.wjsj, row.wjmc, row.wjlx)
     },
     // 提交反馈
     handleSubmitFeedback({ validateResult }) {
@@ -714,16 +787,20 @@ export default {
     async handleSubmit() {
       // 上传文件校验
       let isFiles
+      let base64Data
+      let base64Data1
       if (this.files.length === 0) {
         // this.$message.error('请上传反馈文件')
         isFiles = {}
       } else {
+        base64Data = await this.uploadImgToBase64(this.files[0].raw)
+        base64Data1 = base64Data.split(',', 2)[1]
         isFiles = {
           zxbh: this.parentParams.zxbh,
           id: this.parentParams.id,
           wjlx: '1',
           wjmc: this.files[0].name,
-          wjsj: await this.uploadImgToBase64(this.files[0].raw),
+          wjsj: base64Data1,
           cjsj: null
         }
       }
@@ -734,10 +811,11 @@ export default {
         sqData: {
           zxbh: this.parentParams.zxbh,
           id: this.parentParams.id,
-          jbr: this.parentParams.jbr,
-          jbrxm: this.parentParams.jbrxm,
-          jbrzjhm: this.parentParams.jbrzjhm,
+          jbr: this.feedbackInfo.jbr,
+          jbrxm: this.feedbackInfo.jbrxm,
+          jbrzjhm: this.feedbackInfo.jbrzjhm,
           promiseDate: this.feedbackInfo.promiseDate,
+          promiseDay: this.feedbackInfo.promiseDay,
           busiid: this.feedbackInfo.busiid,
           fkrq: null,
           fksj: null,
@@ -759,18 +837,38 @@ export default {
         //   cjsj: null
         // }
       }
-      feedbackOp(feedbackData).then(res => {
-        if (res.code === 200) {
-          setTimeout(() => {
-            this.$message.success('反馈提交成功')
+      feedbackOp(feedbackData)
+        .then(res => {
+          if (res.code === 200) {
+            setTimeout(() => {
+              this.$message.success('反馈提交成功')
+              this.btnLoading = false
+              this.btnLoading111 = false
+              this.openFeedback = false
+              this.$emit('refresh')
+            }, 2000)
+          } else {
             this.btnLoading = false
-            this.openFeedback = false
-            this.$emit('refresh')
-          }, 2000)
-        } else {
-          this.$message.error('反馈提交失败，请稍后重试')
-        }
-      })
+            this.btnLoading111 = false
+            this.$message.error(res)
+          }
+        })
+        .catch(error => {
+          this.btnLoading = false
+          // 检查响应状态码
+          if (error.message) {
+            // 显示错误信息的逻辑
+            this.$message.error(error.message)
+          } else {
+            // showErrorMessage('An error occurred')
+          }
+        })
+      // await setTimeout(() => {
+      //   if (this.btnLoading111) {
+      //     this.btnLoading = false
+      //     this.$message.error('系统错误，请稍后重试')
+      //   }
+      // }, 4000)
     },
     shortenFilename(filename, maxLength) {
       // 检查文件名是否超长

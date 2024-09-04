@@ -25,21 +25,3 @@ export function feedbackOp(data) {
     data: data
   })
 }
-
-// 浏览政务数据直达系统 -文件补传
-export function fileBc(data) {
-  return request({
-    url: '/zwsj/zwsjcx/fileBc',
-    method: 'post',
-    data: data
-  })
-}
-
-// 浏览政务数据直达系统 -外呼次数重置
-export function resetWh(data) {
-  return request({
-    url: '/zwsj/zwsjcx/resetWhcs',
-    method: 'post',
-    params: data
-  })
-}

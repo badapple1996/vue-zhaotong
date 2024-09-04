@@ -2,7 +2,7 @@
   <t-dialog
     :visible.sync="openFeedback"
     attach="body"
-    header="个人破产一件事反馈"
+    header="企业破产一件事反馈"
     destroyOnClose
     :footer="false"
     width="85%"
@@ -14,13 +14,13 @@
       <t-card title="基本信息" class="info-block" :bordered="false">
         <t-descriptions :column="3" bordered colon size="small">
           <t-descriptions-item label="企业名称">
-            <t-input v-model="baseInfoData.qymc" borderless readonly />
+            <t-input v-model="baseInfoData.qymc" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="统一社会信用代码">
-            <t-input v-model="baseInfoData.tyshxydm" borderless readonly />
+            <t-input v-model="baseInfoData.tyshxydm" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="经办人身份证号">
-            <t-input v-model="baseInfoData.jbr_sfzh" borderless readonly />
+            <t-input v-model="baseInfoData.jbr_sfzh" borderless readonly placeholder="-" />
           </t-descriptions-item>
         </t-descriptions>
       </t-card>
@@ -146,6 +146,7 @@ export default {
       date: new Date().toLocaleString(),
       files: [],
       btnLoading: false,
+      btnLoading111: true,
       GENDER,
       DOCUMENT_TYPE,
       NATION,
@@ -196,21 +197,32 @@ export default {
     handleGetInfo(row) {
       this.loading = true
       this.$nextTick(() => {
-        getInfoById({ zxbh: row.zxbh, id: row.id }).then(res => {
-          this.loading = false
-          if (res.code === 200) {
-            console.log(JSON.parse(JSON.stringify(res.data)))
-            // data数据
-            let dataInfo = res.data.zwbjzdxtbjData
-            this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
-            // 文件数据
-            this.fileList = res.data.zwbjzdxtbjFileList
-            // 基本数据
-            this.feedbackInfo = {}
-          } else {
-            this.$message.error('获取失败，请稍后重试')
-          }
-        })
+        getInfoById({ zxbh: row.zxbh, id: row.id })
+          .then(res => {
+            this.loading = false
+            if (res.code === 200) {
+              console.log(JSON.parse(JSON.stringify(res.data)))
+              // data数据
+              let dataInfo = res.data.zwbjzdxtbjData
+              this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
+              // 文件数据
+              this.fileList = res.data.zwbjzdxtbjFileList
+              // 基本数据
+              this.feedbackInfo = {}
+            } else {
+              this.$message.error(res)
+            }
+          })
+          .catch(error => {
+            this.btnLoading = false
+            // 检查响应状态码
+            if (error.message) {
+              // 显示错误信息的逻辑
+              this.$message.error(error.message)
+            } else {
+              // showErrorMessage('An error occurred')
+            }
+          })
       })
     },
     // 格式化基础数据
@@ -260,9 +272,15 @@ export default {
     translateDict(dict, value) {
       return dict.filter(d => d.value == value)[0]?.label || value
     },
-    downloadBase64File(base64Data, fileName) {
+    downloadBase64File(base64Data, fileName, fileType) {
+      let binaryString
+      if (fileType == '1') {
+        binaryString = atob(atob(base64Data))
+      } else {
+        binaryString = atob(base64Data)
+      }
       // 将 Base64 字符串转换为二进制数据
-      const binaryString = atob(base64Data)
+      // const binaryString = atob(atob(base64Data))
       const len = binaryString.length
       const bytes = new Uint8Array(len)
 
@@ -283,11 +301,15 @@ export default {
     },
     // 下载附件
     handleDownload(row) {
-      this.downloadBase64File(row.wjsj, row.wjmc)
+      this.downloadBase64File(row.wjsj, row.wjmc, row.wjlx)
     },
     // 提交反馈
     async handleSubmitFeedback() {
       // 上传文件校验
+      let base64Data
+      let base64Data1
+      base64Data = await this.uploadImgToBase64(this.files[0].raw)
+      base64Data1 = base64Data.split(',', 2)[1]
       if (this.files.length === 0) {
         this.$message.error('请上传反馈文件')
         return
@@ -318,23 +340,43 @@ export default {
           id: this.parentParams.id,
           wjlx: '1',
           wjmc: this.files[0].name,
-          wjsj: await this.uploadImgToBase64(this.files[0].raw),
+          wjsj: base64Data1,
           cjsj: null
         }
       }
       console.log(feedbackData)
-      feedbackOp(feedbackData).then(res => {
-        if (res.code === 200) {
-          setTimeout(() => {
-            this.$message.success('反馈提交成功')
+      feedbackOp(feedbackData)
+        .then(res => {
+          if (res.code === 200) {
+            setTimeout(() => {
+              this.$message.success('反馈提交成功')
+              this.btnLoading = false
+              this.btnLoading111 = false
+              this.openFeedback = false
+              this.$emit('refresh')
+            }, 2000)
+          } else {
             this.btnLoading = false
-            this.openFeedback = false
-            this.$emit('refresh')
-          }, 2000)
-        } else {
-          this.$message.error('反馈提交失败，请稍后重试')
-        }
-      })
+            this.btnLoading111 = false
+            this.$message.error(res)
+          }
+        })
+        .catch(error => {
+          this.btnLoading = false
+          // 检查响应状态码
+          if (error.message) {
+            // 显示错误信息的逻辑
+            this.$message.error(error.message)
+          } else {
+            // showErrorMessage('An error occurred')
+          }
+        })
+      //   await setTimeout(() => {
+      //   if (this.btnLoading111) {
+      //     this.btnLoading = false
+      //     this.$message.error('系统错误，请稍后重试')
+      //   }
+      // }, 4000)
     },
     handleResultChange(value) {
       this.feedbackInfo.cljg = value

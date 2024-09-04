@@ -14,37 +14,37 @@
       <t-card title="基本信息" class="info-block" :bordered="false">
         <t-descriptions :column="3" bordered colon size="small">
           <t-descriptions-item label="申报对象证件号码">
-            <t-input v-model="baseInfoData.applicantIdnumber" borderless readonly />
+            <t-input v-model="baseInfoData.applicantIdnumber" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="申报对象名称">
-            <t-input v-model="baseInfoData.applicantName" borderless readonly />
+            <t-input v-model="baseInfoData.applicantName" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="联系电话">
-            <t-input v-model="baseInfoData.mobile" borderless readonly />
+            <t-input v-model="baseInfoData.mobile" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="姓名">
-            <t-input v-model="baseInfoData.name" borderless readonly />
+            <t-input v-model="baseInfoData.name" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="证件类型">
-            <t-input v-model="baseInfoData.idCardType" borderless readonly />
+            <t-input v-model="baseInfoData.idCardType" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="缴存银行卡号">
-            <t-input v-model="baseInfoData.bankAccount" borderless readonly />
+            <t-input v-model="baseInfoData.bankAccount" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="公积金缴存银行">
-            <t-input v-model="baseInfoData.bankName" borderless readonly />
+            <t-input v-model="baseInfoData.bankName" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="公积金缴存银行名称">
-            <t-input v-model="baseInfoData.bankNameString" borderless readonly />
+            <t-input v-model="baseInfoData.bankNameString" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="单位名称">
-            <t-input v-model="baseInfoData.companyName" borderless readonly />
+            <t-input v-model="baseInfoData.companyName" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="单位统一社会信用代码">
-            <t-input v-model="baseInfoData.socialCreditCode" borderless readonly />
+            <t-input v-model="baseInfoData.socialCreditCode" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="户籍所在地">
-            <t-input v-model="baseInfoData.householdAreaCode" borderless readonly />
+            <t-input v-model="baseInfoData.householdAreaCode" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="退休标识">
             <t-tag :theme="baseInfoData.isRetire == '01' ? 'success' : 'warning'">{{
@@ -52,23 +52,23 @@
             }}</t-tag>
           </t-descriptions-item>
           <t-descriptions-item label="主管单位名称">
-            <t-input v-model="baseInfoData.parentCompanyName" borderless readonly />
+            <t-input v-model="baseInfoData.parentCompanyName" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="主管单位统一社会信用代码">
-            <t-input v-model="baseInfoData.parentSocialCreditCode" borderless readonly />
+            <t-input v-model="baseInfoData.parentSocialCreditCode" borderless readonly placeholder="-" />
           </t-descriptions-item>
 
           <t-descriptions-item label="人员类别">
-            <t-input v-model="baseInfoData.personalStatus" borderless readonly />
+            <t-input v-model="baseInfoData.personalStatus" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="人事档案保管机构名称">
-            <t-input v-model="baseInfoData.personnelFileOrg" borderless readonly />
+            <t-input v-model="baseInfoData.personnelFileOrg" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="人事档案保管机构联系电话">
-            <t-input v-model="baseInfoData.personnelFileOrgTel" borderless readonly />
+            <t-input v-model="baseInfoData.personnelFileOrgTel" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="人员类型">
-            <t-input v-model="baseInfoData.personType" borderless readonly />
+            <t-input v-model="baseInfoData.personType" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="是否独生子女父母">
             <t-tag :theme="baseInfoData.isOnlyChild == '02' ? 'success' : 'warning'">{{
@@ -76,10 +76,10 @@
             }}</t-tag>
           </t-descriptions-item>
           <t-descriptions-item label="退休时间">
-            <t-input v-model="baseInfoData.retirementDate" borderless readonly />
+            <t-input v-model="baseInfoData.retirementDate" borderless readonly placeholder="-" />
           </t-descriptions-item>
           <t-descriptions-item label="创建时间">
-            <t-input v-model="baseInfoData.createtime" borderless readonly />
+            <t-input v-model="baseInfoData.createtime" borderless readonly placeholder="-" />
           </t-descriptions-item>
         </t-descriptions>
       </t-card>
@@ -121,17 +121,27 @@
                   <t-input v-model="feedbackInfo.busiid" placeholder="请输入业务序号"></t-input>
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="单位账号">
+              <!-- <t-descriptions-item label="单位账号">
                 <t-form-item label="" name="unitaccnum">
                   <t-input v-model="feedbackInfo.unitaccnum" placeholder="请输入单位账号"></t-input>
                 </t-form-item>
-              </t-descriptions-item>
+              </t-descriptions-item> -->
               <t-descriptions-item>
                 <template v-slot:label>
                   <span style="color: red; margin-right: 2px">*</span> <span>办理日期</span>
                 </template>
                 <t-form-item label="" name="date">
-                  <t-date-picker style="width: 100%" v-model="feedbackInfo.date" placeholder="请选择办理日期" />
+                  <t-date-picker
+                    style="width: 100%"
+                    v-model="feedbackInfo.date"
+                    :disable-date="{
+                      before: dayjs()
+                        .subtract(diffDays + 1, 'day')
+                        .format()
+                      // after: dayjs().add(3, 'day').format()
+                    }"
+                    placeholder="请选择办理日期"
+                  />
                 </t-form-item>
               </t-descriptions-item>
               <t-descriptions-item>
@@ -189,6 +199,14 @@
                   <t-input v-model="feedbackInfo.jbrzjhm" placeholder="请输入经办人证件号码"></t-input>
                 </t-form-item>
               </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>承诺办结工作日</span>
+                </template>
+                <t-form-item label="" name="promiseDay">
+                  <t-input v-model="feedbackInfo.promiseDay" placeholder="请输入承诺办结工作日"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
               <t-descriptions-item :span="1">
                 <template v-slot:label>
                   <span style="color: red; margin-right: 2px">*</span> <span>承诺办结时间</span>
@@ -201,7 +219,11 @@
                     v-model="feedbackInfo.promiseDate"
                     placeholder="请选择承诺办结时间"
                     clearable
-                    :disable-date="{ before: dayjs().subtract(1, 'day').format() }"
+                    :disable-date="{
+                      before: dayjs()
+                        .subtract(diffDays + 1, 'day')
+                        .format()
+                    }"
                     :time-picker-props="timePickerProps"
                     @pick="date => (pickDate = dayjs(date).format('YYYY-MM-DD'))"
                   />
@@ -215,7 +237,10 @@
                   <t-input v-model="feedbackInfo.reviewOrgTel" placeholder="请输入咨询电话"></t-input>
                 </t-form-item>
               </t-descriptions-item>
-              <t-descriptions-item label="上传文件" class="feedback-form-upload">
+              <t-descriptions-item label="上传文件">
+                <!-- <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>上传文件</span>
+                </template> -->
                 <t-upload
                   :autoUpload="false"
                   v-model="files"
@@ -284,6 +309,54 @@
               </t-descriptions-item>
               <t-descriptions-item>
                 <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>办理日期</span>
+                </template>
+                <t-form-item label="" name="date">
+                  <t-date-picker
+                    style="width: 100%"
+                    v-model="feedbackInfo.date"
+                    :disable-date="{
+                      before: dayjs()
+                        .subtract(diffDays + 1, 'day')
+                        .format()
+                      // after: dayjs().add(3, 'day').format()
+                    }"
+                    placeholder="请选择办理日期"
+                  />
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>提取本金</span>
+                </template>
+                <t-form-item label="" name="withdrawalPrincipal">
+                  <t-input-number
+                    placeholder="请输入提取本金"
+                    style="width: 100%"
+                    theme="normal"
+                    v-model="feedbackInfo.withdrawalPrincipal"
+                    large-number
+                    :format="format"
+                  ></t-input-number>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>提取利息</span>
+                </template>
+                <t-form-item label="" name="withdrawalInterest">
+                  <t-input-number
+                    style="width: 100%"
+                    theme="normal"
+                    v-model="feedbackInfo.withdrawalInterest"
+                    large-number
+                    :format="format"
+                    placeholder="请输入提取利息"
+                  ></t-input-number>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
                   <span style="color: red; margin-right: 2px">*</span> <span>经办人账号</span>
                 </template>
                 <t-form-item label="" name="jbr">
@@ -308,6 +381,14 @@
               </t-descriptions-item>
               <t-descriptions-item>
                 <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>承诺办结工作日</span>
+                </template>
+                <t-form-item label="" name="promiseDay">
+                  <t-input v-model="feedbackInfo.promiseDay" placeholder="请输入承诺办结工作日"></t-input>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item>
+                <template v-slot:label>
                   <span style="color: red; margin-right: 2px">*</span> <span>承诺办结时间</span>
                 </template>
                 <t-form-item label="" name="promiseDate">
@@ -318,10 +399,22 @@
                     v-model="feedbackInfo.promiseDate"
                     placeholder="请选择承诺办结时间"
                     clearable
-                    :disable-date="{ before: dayjs().subtract(1, 'day').format() }"
+                    :disable-date="{
+                      before: dayjs()
+                        .subtract(diffDays + 1, 'day')
+                        .format()
+                    }"
                     :time-picker-props="timePickerProps"
                     @pick="date => (pickDate = dayjs(date).format('YYYY-MM-DD'))"
                   />
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item :span="2">
+                <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>咨询电话</span>
+                </template>
+                <t-form-item label="" name="reviewOrgTel">
+                  <t-input v-model="feedbackInfo.reviewOrgTel" placeholder="请输入咨询电话"></t-input>
                 </t-form-item>
               </t-descriptions-item>
               <t-descriptions-item :span="3">
@@ -330,7 +423,10 @@
                 </template>
                 <t-textarea v-model="feedbackInfo.sjyy" placeholder="请输入失败原因" />
               </t-descriptions-item>
-              <t-descriptions-item label="上传文件" class="feedback-form-upload">
+              <t-descriptions-item label="上传文件">
+                <!-- <template v-slot:label>
+                  <span style="color: red; margin-right: 2px">*</span> <span>上传文件</span>
+                </template> -->
                 <t-upload
                   :autoUpload="false"
                   v-model="files"
@@ -427,11 +523,14 @@ export default {
   components: { CloudDownloadIcon, GestureUpIcon },
   data() {
     return {
+      disSqrq: '', //承诺办结时间
+      diffDays: '', //天数
       date: new Date().toLocaleString(),
       files: [],
       // isRequired: 'false',
       //按钮加载
       btnLoading: false,
+      btnLoading111: true,
 
       GENDER,
       DOCUMENT_TYPE,
@@ -517,7 +616,9 @@ export default {
         // 经办人证件号码
         jbrzjhm: null,
         //承诺办结时间
-        promiseDate: null
+        promiseDate: null,
+        //承诺办结工作日
+        promiseDay: '3'
       },
       // 附件列表
       fileList: [],
@@ -539,7 +640,8 @@ export default {
         jbr: [{ required: true, message: '', type: 'error' }],
         jbrxm: [{ required: true, message: '', type: 'error' }],
         jbrzjhm: [{ required: true, message: '', type: 'error' }],
-        promiseDate: [{ required: true, message: '', type: 'error' }]
+        promiseDate: [{ required: true, message: '', type: 'error' }],
+        promiseDay: [{ required: true, message: '', type: 'error' }]
       },
       pickDate: '',
       dayjs
@@ -561,6 +663,28 @@ export default {
   },
   mounted() {},
   methods: {
+    // 计算并返回两个日期之间的天数差（字符串格式）
+    getDaysDifference(dateStr) {
+      // dateStr为申请日期
+      // 将目标日期字符串转换为Date对象
+      const targetDate = new Date(dateStr)
+      // 获取当前日期
+      const now = new Date()
+
+      // 为了计算天数差，我们只关心年和月日部分，因此将时间部分设置为00:00:00
+      targetDate.setHours(0, 0, 0, 0)
+      now.setHours(0, 0, 0, 0)
+
+      // 计算时间差（毫秒）
+      const diff = now - targetDate
+
+      // 将毫秒转换为天数
+      this.diffDays = Math.ceil(diff / (1000 * 3600 * 24))
+      console.log(this.diffDays, 'this.diffDays++++++++')
+
+      // 根据天数差返回相应的字符串
+      // return `${diffDays}天`;
+    },
     // 切换处理结果
     handleResultChange(value) {
       this.feedbackInfo.cljg = value
@@ -570,6 +694,7 @@ export default {
       // 重置失败原因
       this.feedbackInfo.sjyy = null
       this.feedbackInfo.reviewOrgTel = '0871-12329'
+      this.feedbackInfo.promiseDay = '3'
     },
     // 显示弹窗
     showFeedbackDialog(row) {
@@ -648,7 +773,9 @@ export default {
         // 经办人证件号码
         jbrzjhm: null,
         // 承诺办结时间
-        promiseDate: null
+        promiseDate: null,
+        // 承诺办结工作日
+        promiseDay: '3'
       }
       this.fileList = []
       this.handleGetInfo(row)
@@ -657,22 +784,36 @@ export default {
     handleGetInfo(row) {
       this.loading = true
       this.$nextTick(() => {
-        getInfoById({ zxbh: row.zxbh, id: row.id }).then(res => {
-          this.loading = false
-          if (res.code === 200) {
-            console.log(JSON.parse(JSON.stringify(res.data)))
-            // data数据
-            let dataInfo = res.data.zwbjzdxtbjData
-            this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
-            // 文件数据
-            this.fileList = res.data.zwbjzdxtbjFileList
-            // 反馈数据
-            this.feedbackInfo = {}
-            this.feedbackInfo.reviewOrgTel = '0871-12329'
-          } else {
-            this.$message.error('获取失败，请稍后重试')
-          }
-        })
+        getInfoById({ zxbh: row.zxbh, id: row.id })
+          .then(res => {
+            this.loading = false
+            if (res.code === 200) {
+              console.log(JSON.parse(JSON.stringify(res.data)))
+              // data数据
+              let dataInfo = res.data.zwbjzdxtbjData
+              this.handleFormatBaseInfo(JSON.parse(dataInfo.zwqjsj))
+              // 文件数据
+              this.fileList = res.data.zwbjzdxtbjFileList
+              this.disSqrq = res.data.zwbjzdxtbjSq.sqrq
+              this.getDaysDifference(this.disSqrq)
+              // 反馈数据
+              // this.feedbackInfo = {}
+              // this.feedbackInfo.reviewOrgTel = '0871-12329'
+              // this.feedbackInfo.promiseDay = '3'
+            } else {
+              this.$message.error(res)
+            }
+          })
+          .catch(error => {
+            this.btnLoading = false
+            // 检查响应状态码
+            if (error.message) {
+              // 显示错误信息的逻辑
+              this.$message.error(error.message)
+            } else {
+              // showErrorMessage('An error occurred')
+            }
+          })
       })
     },
     // 格式化基础数据
@@ -723,9 +864,15 @@ export default {
     translateDict(dict, value) {
       return dict.filter(d => d.value == value)[0]?.label || value
     },
-    downloadBase64File(base64Data, fileName) {
+    downloadBase64File(base64Data, fileName, fileType) {
+      let binaryString
+      if (fileType == '1') {
+        binaryString = atob(atob(base64Data))
+      } else {
+        binaryString = atob(base64Data)
+      }
       // 将 Base64 字符串转换为二进制数据
-      const binaryString = atob(base64Data)
+      // const binaryString = atob(atob(base64Data))
       const len = binaryString.length
       const bytes = new Uint8Array(len)
 
@@ -746,7 +893,7 @@ export default {
     },
     // 下载附件
     handleDownload(row) {
-      this.downloadBase64File(row.wjsj, row.wjmc)
+      this.downloadBase64File(row.wjsj, row.wjmc, row.wjlx)
     },
     // 提交反馈
     handleSubmitFeedback({ validateResult }) {
@@ -766,7 +913,7 @@ export default {
           this.$message.error('请输入失败原因')
           return
         } else {
-          this.btnLoading = true
+          // this.btnLoading = true
           this.handleSubmit()
         }
       }
@@ -775,16 +922,21 @@ export default {
     async handleSubmit() {
       // 上传文件校验
       let isFiles
+      let base64Data
+      let base64Data1
       if (this.files.length === 0) {
         // this.$message.error('请上传反馈文件')
         isFiles = {}
+        // return
       } else {
+        base64Data = await this.uploadImgToBase64(this.files[0].raw)
+        base64Data1 = base64Data.split(',', 2)[1]
         isFiles = {
           zxbh: this.parentParams.zxbh,
           id: this.parentParams.id,
           wjlx: '1',
           wjmc: this.files[0].name,
-          wjsj: await this.uploadImgToBase64(this.files[0].raw),
+          wjsj: base64Data1,
           cjsj: null
         }
       }
@@ -794,10 +946,11 @@ export default {
         sqData: {
           zxbh: this.parentParams.zxbh,
           id: this.parentParams.id,
-          jbr: this.parentParams.jbr,
-          jbrxm: this.parentParams.jbrxm,
-          jbrzjhm: this.parentParams.jbrzjhm,
+          jbr: this.feedbackInfo.jbr,
+          jbrxm: this.feedbackInfo.jbrxm,
+          jbrzjhm: this.feedbackInfo.jbrzjhm,
           promiseDate: this.feedbackInfo.promiseDate,
+          promiseDay: this.feedbackInfo.promiseDay,
           busiid: this.feedbackInfo.busiid,
           fkrq: null,
           fksj: null,
@@ -819,18 +972,41 @@ export default {
         //   cjsj: null
         // }
       }
-      feedbackOp(feedbackData).then(res => {
-        if (res.code === 200) {
-          setTimeout(() => {
-            this.$message.success('反馈提交成功')
+      console.log('2212121', JSON.parse(JSON.stringify(feedbackData)))
+      feedbackOp(feedbackData)
+        .then(res => {
+          if (res.code === 200) {
+            setTimeout(() => {
+              this.$message.success('反馈提交成功')
+              this.btnLoading = false
+              this.btnLoading111 = false
+              this.openFeedback = false
+              this.$emit('refresh')
+            }, 2000)
+          } else {
             this.btnLoading = false
-            this.openFeedback = false
-            this.$emit('refresh')
-          }, 2000)
-        } else {
-          this.$message.error('反馈提交失败，请稍后重试')
-        }
-      })
+            this.btnLoading111 = false
+            this.$message.error(res)
+          }
+        })
+        .catch(error => {
+          this.btnLoading = false
+          // 检查响应状态码
+          if (error.message) {
+            // 显示错误信息的逻辑
+            this.$message.error(error.message)
+          } else {
+            // showErrorMessage('An error occurred')
+          }
+        })
+      // await setTimeout(() => {
+      //   if (this.btnLoading111) {
+      //     console.log(this.btnLoading111,'this.btnLoading111_____');
+
+      //     this.btnLoading = false
+      //     this.$message.error('系统错误，请稍后重试')
+      //   }
+      // }, 4000)
     },
     shortenFilename(filename, maxLength) {
       // 检查文件名是否超长

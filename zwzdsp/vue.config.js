@@ -57,7 +57,7 @@ module.exports = defineConfig({
     proxy: {
       //配置跨域
       '/zwsj': {
-          target: "http://192.168.1.46:8085",
+          target: "http://192.168.1.47:8085",
           // ws:true,
           changOrigin:true,
           // pathRewrite:{

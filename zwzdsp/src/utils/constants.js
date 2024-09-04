@@ -5,14 +5,14 @@ export const APPLY_TYPE = {
   BANKRUPTCY: { label: '企业破产一件事', value: 'bankruptcy' }
 }
 // 办件状态
-export const PROCESS_STATUS = [
-  { label: '接收成功', value: '1' },
-  { label: '接收失败', value: '2' },
-  { label: '反馈成功', value: '3' },
-  { label: '反馈失败', value: '4' },
-  { label: '成功办件外呼完成', value: '5' },
-  { label: '失败办件外呼完成 ', value: '6' }
-]
+export const PROCESS_STATUS = {
+  RECEIVE_SUCCESS: { label: '接收成功', value: '1' },
+  RECEIVE_FAILURE: { label: '接收失败', value: '2' },
+  FEEDBACK_SUCCESS: { label: '反馈成功', value: '3' },
+  FEEDBACK_FAILURE: { label: '反馈失败', value: '4' },
+  OUTCALL_SUCCESS: { label: '外呼成功', value: '5' },
+  OUTCALL_FAILURE: { label: '外呼失败', value: '6' }
+}
 // 证件类型
 export const DOCUMENT_TYPE = [
   {
@@ -188,31 +188,12 @@ export const NTR_F_HSHLD_RGSTRTN = [
 
 // 缴存银行
 export const DEPOSIT_INTO_BANK = [
-  { label: '中国工商银行', value: '01' },
-  { label: '中国建设银行', value: '02' },
-  { label: '中国农业银行', value: '03' },
-  { label: '中国银行	', value: '04' },
-  { label: '中国交通银行', value: '05' },
-  { label: '招商银行', value: '07' },
-  { label: '华夏银行', value: '08' },
-  { label: '浦发银行', value: '09' },
-  { label: '光大银行', value: '10' },
-  { label: '民生银行', value: '11' },
-  { label: '兴业银行', value: '12' },
-  { label: '中信银行', value: '13' },
-  { label: '广发银行', value: '14' },
-  { label: '平安银行', value: '15' },
-  { label: '农信社', value: '16' },
-  { label: '国家开发银行', value: '17' },
-  { label: '恒丰银行', value: '18' },
-  { label: '云南红塔银行', value: '19' },
-  { label: '中国邮政储蓄银行', value: '20' },
-  { label: '曲靖市商业银行', value: '21' },
-  { label: '文山民丰村镇银行', value: '22' },
-  { label: '沪农商村镇银行', value: '23' },
-  { label: '普洱民生村镇银行', value: '24' },
-  { label: '云南省农村商业银行', value: '25' },
-  { label: '中国农业发展银行', value: '26' }
+  { label: '中国银行', value: '1' },
+  { label: '农业银行', value: '2' },
+  { label: '工商银行', value: '3' },
+  { label: '建设银行', value: '4' },
+  { label: '交通银行', value: '5' },
+  { label: '其他银行', value: '6' }
 ]
 
 // 学历
@@ -241,6 +222,17 @@ export const PERSONNEL_TYPE = [
   { label: '灵活就业人员', value: '1' },
   { label: '企业职工', value: '2' },
   { label: '机关事业单位人员', value: '3' }
+]
+// 退休标识
+export const IS_RETIRE = [
+  {
+    value: '01',
+    label: '退休'
+  },
+  {
+    value: '02',
+    label: '未退休'
+  }
 ]
 
 // 人员类别

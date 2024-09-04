@@ -77,10 +77,10 @@
           @filter-change="onFilterChange"
           @change="onChange"
         >
-          <!-- <template #serial-number="{ row }">
-            <p class="serial-number"> -->
+          <!-- <template #idIndex="{ row }">
+            <p class="idIndex"> -->
           <!-- 计算并显示序号 -->
-          <!-- {{ (queryParams.pageNum - 1) * queryParams.pageSize + index + 1 + globalIndexOffset }}
+          <!-- {{ (queryParams.pageNum - 1) * queryParams.pageSize + row.index + 1 + globalIndexOffset }}
             </p>
           </template> -->
           <template #applytype="{ row }">
@@ -95,17 +95,23 @@
             }}</t-tag>
           </template>
           <template #status="{ row }">
-            <t-tag v-if="row.status === PROCESS_STATUS.RECEIVE_SUCCESS.value" theme="primary" variant="light">{{
-              PROCESS_STATUS.RECEIVE_SUCCESS.label
+            <t-tag v-if="row.status === PROCESS_STATUS[0].value" theme="primary" variant="light">{{
+              PROCESS_STATUS[0].label
             }}</t-tag>
-            <t-tag v-if="row.status === PROCESS_STATUS.RECEIVE_FAILURE.value" theme="warning" variant="light">{{
-              PROCESS_STATUS.RECEIVE_FAILURE.label
+            <t-tag v-if="row.status === PROCESS_STATUS[1].value" theme="warning" variant="light">{{
+              PROCESS_STATUS[1].label
             }}</t-tag>
-            <t-tag v-if="row.status === PROCESS_STATUS.FEEDBACK_SUCCESS.value" theme="success" variant="light">{{
-              PROCESS_STATUS.FEEDBACK_SUCCESS.label
+            <t-tag v-if="row.status === PROCESS_STATUS[2].value" theme="success" variant="light">{{
+              PROCESS_STATUS[2].label
             }}</t-tag>
-            <t-tag v-if="row.status === PROCESS_STATUS.FEEDBACK_FAILURE.value" theme="danger" variant="light">{{
-              PROCESS_STATUS.FEEDBACK_FAILURE.label
+            <t-tag v-if="row.status === PROCESS_STATUS[3].value" theme="danger" variant="light">{{
+              PROCESS_STATUS[3].label
+            }}</t-tag>
+            <t-tag v-if="row.status === PROCESS_STATUS[4].value" theme="danger" variant="light">{{
+              PROCESS_STATUS[4].label
+            }}</t-tag>
+            <t-tag v-if="row.status === PROCESS_STATUS[5].value" theme="danger" variant="light">{{
+              PROCESS_STATUS[5].label
             }}</t-tag>
           </template>
           <!-- 证件类型 -->
@@ -117,12 +123,27 @@
           <template #op="{ row }">
             <t-space>
               <!-- v-if="row.status === PROCESS_STATUS.RECEIVE_SUCCESS.value" -->
-              <t-button size="small" theme="warning" @click="handleFeedback(row)" variant="outline">
+              <t-button
+                v-if="row.status === PROCESS_STATUS[0].value"
+                size="small"
+                theme="warning"
+                @click="handleFeedback(row)"
+                variant="outline"
+              >
                 <discount-icon slot="icon" />反馈</t-button
               >
               <!-- v-else -->
-              <t-button size="small" theme="primary" @click="handleBrowse(row)" variant="outline">
+              <t-button v-else size="small" theme="primary" @click="handleBrowse(row)" variant="outline">
                 <adjustment-icon slot="icon" />浏览</t-button
+              >
+              <t-button
+                v-if="row.whsbcs == 10 || row.whsbcs > 10"
+                size="small"
+                theme="warning"
+                @click="whReset(row)"
+                variant="outline"
+              >
+                <load-icon slot="icon" />外呼次数重置</t-button
               >
             </t-space>
           </template>
@@ -140,15 +161,15 @@
       </div>
     </div>
     <!-- 个人就业创业浏览 -->
-    <job-browse ref="JobBrowse"></job-browse>
+    <job-browse ref="JobBrowse" @refresh="handleFlush"></job-browse>
     <!-- 个人就业创业反馈 -->
     <job-feedback ref="JobFeedback" @refresh="handleFlush"></job-feedback>
     <!-- 退休浏览 -->
-    <retire-browse ref="RetireBrowse"></retire-browse>
+    <retire-browse ref="RetireBrowse" @refresh="handleFlush"></retire-browse>
     <!-- 退休反馈 -->
     <retire-feedback ref="RetireFeedback" @refresh="handleFlush"></retire-feedback>
     <!-- 破产浏览 -->
-    <bankruptcy-browse ref="BankruptcyBrowse"></bankruptcy-browse>
+    <bankruptcy-browse ref="BankruptcyBrowse" @refresh="handleFlush"></bankruptcy-browse>
     <!-- 破产反馈 -->
     <bankruptcy-feedback ref="BankruptcyFeedback" @refresh="handleFlush"></bankruptcy-feedback>
   </div>
@@ -157,9 +178,9 @@
 <script>
 import { SearchIcon, FilterClearIcon, RefreshIcon } from 'tdesign-icons-vue'
 import { APPLY_TYPE, PROCESS_STATUS, DOCUMENT_TYPE } from '../../utils/constants.js'
-import { AdjustmentIcon, DiscountIcon } from 'tdesign-icons-vue'
-
-import { listQuery } from '../../api/commonApi'
+import { AdjustmentIcon, DiscountIcon, LoadIcon } from 'tdesign-icons-vue'
+LoadIcon
+import { listQuery, resetWh } from '../../api/commonApi'
 import JobBrowse from './job-browse.vue'
 import JobFeedback from './job-feedback.vue'
 import RetireBrowse from './retire-browse.vue'
@@ -177,13 +198,15 @@ export default {
     BankruptcyBrowse,
     BankruptcyFeedback,
     AdjustmentIcon,
-    DiscountIcon
+    DiscountIcon,
+    LoadIcon
   },
 
   data() {
     return {
       // globalIndexOffset: 0,
       // 根据ID查询详情
+      // whReset:true,//外呼次数重置
       resData: {},
       loading: false,
       APPLY_TYPE,
@@ -224,7 +247,7 @@ export default {
       // 列表数据
       dataList: [],
       displayColumns: [
-        'serial-number',
+        'idIndex',
         'id',
         'applytype',
         'khmc',
@@ -233,17 +256,19 @@ export default {
         'status',
         'sqrq',
         'caseType',
-        'promisedDays',
-        'completionDate',
+        'promiseDay',
         'fkrq',
         'fksj',
         'jbr',
         'busiid',
-        'op'
+        'op',
+        'whsj',
+        'whsbcs',
+        'whxybw'
       ],
       // 行
       columns: [
-        { colKey: 'serial-number', title: '序号', align: 'center', width: '60' },
+        { colKey: 'idIndex', title: '序号', align: 'center', width: '60' },
         { colKey: 'id', title: '申报事件ID', align: 'center', width: '100', ellipsis: true },
         {
           title: () => '申报业务类型',
@@ -287,46 +312,23 @@ export default {
           filter: {
             type: 'multiple',
             resetValue: [],
-            list: [
-              {
-                label: PROCESS_STATUS.RECEIVE_SUCCESS.label,
-                value: PROCESS_STATUS.RECEIVE_SUCCESS.value
-              },
-              {
-                label: PROCESS_STATUS.RECEIVE_FAILURE.label,
-                value: PROCESS_STATUS.RECEIVE_FAILURE.value
-              },
-              {
-                label: PROCESS_STATUS.FEEDBACK_SUCCESS.label,
-                value: PROCESS_STATUS.FEEDBACK_SUCCESS.value
-              },
-              {
-                label: PROCESS_STATUS.FEEDBACK_FAILURE.label,
-                value: PROCESS_STATUS.FEEDBACK_FAILURE.value
-              },
-              {
-                label: PROCESS_STATUS.OUTCALL_SUCCESS.label,
-                value: PROCESS_STATUS.OUTCALL_SUCCESS.value
-              },
-              {
-                label: PROCESS_STATUS.OUTCALL_FAILURE.label,
-                value: PROCESS_STATUS.OUTCALL_FAILURE.value
-              }
-            ],
+            list: PROCESS_STATUS,
             showConfirmAndReset: true
           }
         },
         { colKey: 'sqrq', title: '申请日期', align: 'center', width: '150' },
         { colKey: 'caseType', title: '办件类型', align: 'center', width: '150' },
-        { colKey: 'promisedDays', title: '承诺办件工作日', align: 'center', width: '120' },
-        { colKey: 'completionDate', title: '办结申请时间', align: 'center', width: '150' },
-        { colKey: 'fkrq', title: '反馈日期', align: 'center', width: '150' },
-        { colKey: 'fksj', title: '反馈时间', align: 'center', width: '150' },
+        { colKey: 'promiseDay', title: '承诺办件工作日', align: 'center', width: '120' },
+        { colKey: 'fkrq', title: '反馈日期', align: 'center', width: '150', ellipsis: true },
+        { colKey: 'fksj', title: '反馈时间', align: 'center', width: '150', ellipsis: true },
         { colKey: 'jbr', title: '经办人', align: 'center', width: '150' },
         { colKey: 'busiid', title: '业务序号', align: 'center', width: '150' },
+        { colKey: 'whsj', title: '外呼时间', align: 'center', width: '150', ellipsis: true },
+        { colKey: 'whsbcs', title: '外呼次数', align: 'center', width: '150' },
+        { colKey: 'whxybw', title: '外呼响应信息', align: 'center', width: '150', ellipsis: true },
 
         {
-          width: '180',
+          width: '200',
           align: 'center',
           fixed: 'right',
           colKey: 'op',
@@ -341,19 +343,19 @@ export default {
 
   computed: {
     // 计算开始时间
-    defaultStartTime() {
-      const now = new Date()
-      now.setMonth(now.getMonth() - 1) // 设置为一个月前
-      console.log(now, 'now-----')
+    // defaultStartTime() {
+    //   const now = new Date()
+    //   now.setMonth(now.getMonth() - 1) // 设置为一个月前
+    //   console.log(now, 'now-----')
 
-      return this.formatDate(now)
-    },
+    //   return this.formatDate(now)
+    // },
     // 计算结束时间（当前日期）
-    defaultEndTime() {
-      const now = new Date()
-      console.log(now, 'now=====')
-      return this.formatDate(now)
-    },
+    // defaultEndTime() {
+    //   const now = new Date()
+    //   console.log(now, 'now=====')
+    //   return this.formatDate(now)
+    // },
     presets() {
       return {
         最近7天: [new Date(+new Date() - 86400000 * 6), new Date()],
@@ -365,19 +367,21 @@ export default {
       return {
         placement: 'top-right',
         fields: [
-          'serial-number',
+          'idIndex',
           'id',
           'khmc',
           'zjhm',
           'sqrq',
           'caseType',
-          'promisedDays',
-          'completionDate',
+          'promiseDay',
           'fkrq',
           'fksj',
           'jbr',
           'busiid',
-          'op'
+          'op',
+          'whsj',
+          'whsbcs',
+          'whxybw'
         ],
         // 弹框组件属性透传
         dialogProps: { preventScrollThrough: true },
@@ -394,6 +398,42 @@ export default {
     this.handleGetList()
   },
   methods: {
+    // 外呼次数重置
+    whReset(row) {
+      let params = {
+        zxbh: row.zxbh,
+        id: row.id
+      }
+      resetWh(params)
+        .then(res => {
+          if (res.code === 200) {
+            // setTimeout(() => {
+            this.$message.success('外呼次数重置成功')
+            // this.btnLoading = false
+            // this.openFeedback = false
+            // this.handleFlush()
+            this.handleGetList()
+            // }, 2000)
+          } else {
+            this.$message.error(res)
+          }
+        })
+        .catch(error => {
+          this.btnLoading = false
+          // 检查响应状态码
+          if (error.message) {
+            // 显示错误信息的逻辑
+            this.$message.error(error.message)
+          } else {
+            // showErrorMessage('An error occurred')
+          }
+        })
+      // if () {
+
+      // } else {
+
+      // }
+    },
     // 格式化日期
     formatDate() {
       const date = new Date()
@@ -433,7 +473,7 @@ export default {
         zjlx: [],
         status: []
       }
-      this.dataRange = []
+      this.dataRange = [this.formatDate(), this.formatDate1()]
       this.queryParams = {
         id: null,
         khmc: null,
@@ -455,16 +495,39 @@ export default {
       this.loading = true
       this.queryParams.startDate = this.dataRange[0] ? this.dataRange[0] : null
       this.queryParams.endDate = this.dataRange[1] ? this.dataRange[1] : null
-      listQuery(this.queryParams).then(res => {
-        this.loading = false
-        if (res.code === 200) {
-          console.log(res)
-          this.dataList = res.rows
-          this.total = res.total
-        } else {
-          this.$message.error('获取失败，请稍后重试')
-        }
-      })
+      listQuery(this.queryParams)
+        .then(res => {
+          this.loading = false
+          if (res.code === 200) {
+            console.log(res)
+            this.dataList = res.rows
+            for (let index = 0; index < res.rows.length; index++) {
+              const index1 = (this.queryParams.pageNum - 1) * this.queryParams.pageSize + index + 1
+              this.dataList[index].idIndex = index1
+              // if (
+              //   this.dataList[index].applytypedesc === '个人就业创业' ||
+              //   this.dataList[index].applytypedesc === '退休一件事'
+              // ) {
+              //   this.dataList[index].promiseDay = '3个工作日'
+              // } else {
+              //   this.dataList[index].promiseDay = '11个工作日'
+              // }
+            }
+            this.total = res.total
+          } else {
+            this.$message.error(res)
+          }
+        })
+        .catch(error => {
+          this.btnLoading = false
+          // 检查响应状态码
+          if (error.message) {
+            // 显示错误信息的逻辑
+            this.$message.error(error.message)
+          } else {
+            // showErrorMessage('An error occurred')
+          }
+        })
     },
     // 浏览
     handleBrowse(row) {
@@ -488,7 +551,6 @@ export default {
         this.$refs.BankruptcyFeedback.showFeedbackDialog(row)
       }
     },
-
     // filters 参数包含自定义过滤组件 日期选择器 的值
     onFilterChange(filters, ctx) {
       console.log('filter-change', filters, ctx)
@@ -508,18 +570,31 @@ export default {
       this.queryParams.status = filters.status ? filters.status : []
       this.queryParams.zjlx = filters.zjlx ? filters.zjlx : []
       this.queryParams.applytype = filters.applytype ? filters.applytype : null
-      console.log('queryParams', this.queryParams)
-      listQuery(this.queryParams).then(res => {
-        this.loading = false
-        if (res.code === 200) {
-          this.dataList = res.rows
-          console.log(this.dataList, 'this.dataList=====')
+      this.queryParams.pageNum = 1
+      this.queryParams.pageSize = 10
+      console.log('queryParams++++筛选数据', this.queryParams.pageNum)
+      listQuery(this.queryParams)
+        .then(res => {
+          this.loading = false
+          if (res.code === 200) {
+            this.dataList = res.rows
+            console.log(this.dataList, 'this.dataList=====')
 
-          this.total = res.total
-        } else {
-          this.$message.error('获取失败，请稍后重试')
-        }
-      })
+            this.total = res.total
+          } else {
+            this.$message.error(res)
+          }
+        })
+        .catch(error => {
+          this.btnLoading = false
+          // 检查响应状态码
+          if (error.message) {
+            // 显示错误信息的逻辑
+            this.$message.error(error.message)
+          } else {
+            // showErrorMessage('An error occurred')
+          }
+        })
     },
     searchIcon() {
       return <SearchIcon />
@@ -565,6 +640,7 @@ export default {
   }
   .t-table__column-controller-trigger {
     padding-bottom: 10px;
+    cursor: ew-resize;
   }
 }
 .wrapper {
@@ -592,5 +668,24 @@ export default {
 //   background-clip: text;
 //   -webkit-background-clip: text;
 //   transform: translateX(-0.02em);
+// }
+::v-deep .t-table__content::-webkit-scrollbar {
+  width: 6px;
+  height: 12px !important;
+}
+// .t-table .t-table-scroll-container {
+//   /* 注意：这里的.t-table-scroll-container是一个假设的类名，
+//      你需要根据实际情况替换为正确的类名或选择器 */
+//   overflow-x: auto; /* 确保横向滚动是启用的 */
+//   cursor: ew-resize; /* 尝试为整个滚动容器设置光标样式，但可能不起作用 */
+// }
+// /* （可选）设置鼠标悬停在滑块上的样式 */
+// ::-webkit-scrollbar-thumb:hover {
+//   background-color: #888; /* 滑块颜色变化 */
+//   cursor: ew-resize; /* 尝试为整个滚动容器设置光标样式，但可能不起作用 */
+// }
+// ::v-deep .t-table__column-controller-trigger {
+//     padding-bottom: 10px;
+//     cursor: pointer;
 // }
 </style>
