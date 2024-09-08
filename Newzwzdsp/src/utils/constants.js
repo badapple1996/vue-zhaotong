@@ -4,6 +4,8 @@ export const APPLY_TYPE = {
   RETIRE: { label: '退休一件事', value: 'retire' },
   BANKRUPTCY: { label: '企业破产一件事', value: 'bankruptcy' }
 }
+//职业
+
 // 办件状态
 export const PROCESS_STATUS = [
   { label: '接收成功', value: '1' },
